@@ -1,11 +1,13 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
-const db = require('./config/bd');
+const db = require('./config/db');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+const authRoutes = require('./routes/authRoutes');
+app.use('/api/auth', authRoutes);
 
 // проверка подключения к MySQL
 app.get('/', async (req, res) => {
