@@ -1,0 +1,22 @@
+artfair/
+│
+├── client/                      # Фронтенд
+│   ├── index.html
+│   ├── css/
+│   │   └── styles.css
+│   ├── js/
+│   │   └── script.js
+│
+├── server/                      # Бэкенд
+│   ├── controllers/            # Логика работы (authController.js)
+│   ├── routes/                 # Маршруты API (authRoutes.js)
+│   ├── models/                 # Работа с БД (userModel.js)
+│   ├── config/
+│   │   └── db.js               # Подключение к MySQL
+│   ├── .env                    # Переменные окружения (email, пароль, db info)
+│   ├── server.js               # Точка входа сервера
+│   └── utils/
+│       └── sendEmail.js       # Отправка письма
+│
+├── package.json
+└── README.md
