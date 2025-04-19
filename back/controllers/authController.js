@@ -1,50 +1,60 @@
+const crypto = require('crypto');
+const sendEmail = require('../utils/sendEmail');
 const bcrypt = require('bcrypt');
 const userModel = require('../models/userModel');
-const sendEmail = require('../utils/sendEmail');
+const SALT_ROUNDS = 10; 
 
-const SALT_ROUNDS = 10; // для хеширования пароля
-
-// Регистрация пользователя
 async function register(req, res) {
   const { username, email, password } = req.body;
 
-  // Простая проверка на заполненность
   if (!username || !email || !password) {
     return res.status(400).json({ error: 'Все поля обязательны' });
   }
 
   try {
-    // Проверяем, есть ли пользователь с таким email
     const existingUser = await userModel.findUserByEmail(email);
-    if (existingUser) {
-      return res.status(409).json({ error: 'Пользователь с таким email уже существует' });
-    }
+    if (existingUser) return res.status(409).json({ error: 'Email уже зарегистрирован' });
 
-    // Хешируем пароль
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+    const userId = await userModel.createUser({ username, email, password: hashedPassword });
 
-    // Создаём пользователя в БД
-    const userId = await userModel.createUser({
-      username,
-      email,
-      password: hashedPassword,
-    });
+    // 🔐 Генерация токена
+    const emailToken = crypto.randomBytes(32).toString('hex');
+    await userModel.setEmailToken(userId, emailToken);
 
-    // Отправляем письмо
+    // 📩 Ссылка подтверждения
+    const link = `http://localhost:5000/api/auth/verify?token=${emailToken}`;
     await sendEmail({
       to: email,
-      subject: 'Добро пожаловать в ArtFair!',
-      text: `Привет, ${username}! Спасибо за регистрацию.`,
-      html: `<h1>Привет, ${username}!</h1><p>Спасибо за регистрацию в ArtFair 🎨</p>`,
+      subject: 'Подтверждение регистрации на ArtFair',
+      html: `<p>Привет, ${username}!</p><p>Нажмите на ссылку для подтверждения email:</p><a href="${link}">${link}</a>`,
     });
 
-    return res.status(201).json({ message: 'Регистрация успешна', userId });
+    return res.status(201).json({ message: 'Регистрация успешна. Проверьте email для подтверждения.' });
   } catch (err) {
     console.error('Ошибка регистрации:', err);
     return res.status(500).json({ error: 'Ошибка сервера' });
   }
 }
 
+async function verifyEmail(req, res) {
+  const { token } = req.query;
+
+  if (!token) return res.status(400).json({ error: 'Токен отсутствует' });
+
+  try {
+    const user = await userModel.findUserByEmailToken(token);
+    if (!user) return res.status(400).json({ error: 'Недействительный токен' });
+
+    await userModel.verifyUserEmail(user.id);
+    return res.send('Email успешно подтверждён!');
+  } catch (err) {
+    console.error('Ошибка подтверждения:', err);
+    return res.status(500).json({ error: 'Ошибка сервера' });
+  }
+}
+
 module.exports = {
   register,
+  verifyEmail,
 };

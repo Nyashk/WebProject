@@ -25,4 +25,23 @@ module.exports = {
   createUser,
   findUserByEmail,
   findUserById,
+  setEmailToken,           
+  findUserByEmailToken,    
+  verifyUserEmail         
 };
+
+// Сохранение токена подтверждения email
+async function setEmailToken(userId, token) {
+  await db.query('UPDATE users SET email_token = ? WHERE id = ?', [token, userId]);
+}
+
+// Поиск по email_token
+async function findUserByEmailToken(token) {
+  const [rows] = await db.query('SELECT * FROM users WHERE email_token = ?', [token]);
+  return rows[0];
+}
+
+// Подтверждение email
+async function verifyUserEmail(userId) {
+  await db.query('UPDATE users SET is_verified = true, email_token = NULL WHERE id = ?', [userId]);
+}

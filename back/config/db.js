@@ -1,3 +1,4 @@
+
 //подключиться к бд
 
 const mysql = require("mysql2/promise");
