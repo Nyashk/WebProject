@@ -6,10 +6,10 @@ const db = require('./config/db');
 const app = express();
 app.use(cors());
 app.use(express.json());
+
 const authRoutes = require('./routes/authRoutes');
 app.use('/api/auth', authRoutes);
 
-// проверка подключения к MySQL
 app.get('/', async (req, res) => {
   try {
     const [rows] = await db.query('SELECT 1 + 1 AS solution');

@@ -13,7 +13,7 @@ artfair/
 │   ├── models/                 # Работа с БД (userModel.js)
 │   ├── config/
 │   │   └── db.js               # Подключение к MySQL
-│   ├── .env                    # Переменные окружения (email, пароль, db info)
+│   ├── .env                    # Переменные окружения
 │   ├── server.js               # Точка входа сервера
 │   └── utils/
 │       └── sendEmail.js       # Отправка письма
