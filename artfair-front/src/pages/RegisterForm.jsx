@@ -1,37 +1,31 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Register = () => {
-  const [showPassword, setShowPassword] = useState(false);
-
   return (
-    <div className="login-container">
+    <div className="form-container">
       <form className="register-form">
+        <h2>Регистрация</h2>
         <div className="input-field">
-          <input type="text" required placeholder=" " />
+          <input type="text" name="username" required placeholder=" " />
           <label>Username</label>
         </div>
         <div className="input-field">
-          <input type="email" required placeholder=" " />
+          <input type="email" name="email" required placeholder=" " />
           <label>Email</label>
         </div>
         <div className="input-field">
           <input
-            type={showPassword ? "text" : "password"}
+            type="password"
+            name="password"
             required
             placeholder=" "
           />
           <label>Password</label>
-          <button
-            type="button"
-            className="toggle-password"
-            onClick={() => setShowPassword(!showPassword)}
-          >
-            {showPassword ? "Hide" : "Show"}
-          </button>
         </div>
         <button type="submit">Register</button>
-        <p className="login-link">
-          Already have an account? <a href="/">Login here</a>
+        <p className="register-link">
+          Уже есть аккаунт? <Link to="/">Логин</Link>
         </p>
       </form>
     </div>
