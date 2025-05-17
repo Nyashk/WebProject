@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./SidebarMenu.css";
 
 const SidebarMenu = () => {
   const [isOpen, setIsOpen] = useState(false);

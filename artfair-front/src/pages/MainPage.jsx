@@ -2,19 +2,27 @@ import React from 'react';
 import '../MainPage.css';
 
 const MainPage = () => {
+  const filters = [
+    "Все",
+    "AI рисунки",
+    "Портреты",
+    "Популярные",
+    "Последние работы",
+    "Аниме",
+    "3D",
+    "Раскадровка",
+    "Пейзажи",
+    "Графика"
+  ];
+
   return (
     <div className="main-container">
       <div className="filters">
-        <div className="filter-item">Все</div>
-        <div className="filter-item">AI рисунки</div>
-        <div className="filter-item">Портреты</div>
-        <div className="filter-item">Популярные</div>
-        <div className="filter-item">Последние работы</div>
-        <div className="filter-item">Аниме</div>
-        <div className="filter-item">3D</div>
-        <div className="filter-item">Раскадровка</div>
-        <div className="filter-item">Пейзажи</div>
-        <div className="filter-item">Графика</div>
+        {filters.map((filter, index) => (
+          <div key={index} className="filter-item">
+            {filter}
+          </div>
+        ))}
       </div>
 
       <div className="gallery">

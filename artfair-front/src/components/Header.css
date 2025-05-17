@@ -3,18 +3,18 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color: #10101a; /* теперь цвет как на главной странице */
+  background-color: #10101a;
   border-bottom: 1px solid #444;
 }
 
 .left-section {
   display: flex;
   align-items: center;
+  gap: 10px; /* Убрал лишние пробелы между элементами */
 }
 
 .logo {
   color: white;
-  margin-right: 20px;
   font-size: 24px;
   cursor: pointer;
 }
@@ -38,7 +38,7 @@
   border-radius: 5px;
   padding: 5px 10px;
   color: white;
-  margin-left: -15px; /* немного сдвинул левее */
+  margin-left: -25px; /* Сдвинул левее */
 }
 
 .search-bar input {
@@ -56,11 +56,47 @@
 .right-section {
   display: flex;
   gap: 15px;
-  margin-right: 15px; /* отодвинул правее */
+  margin-right: 15px;
 }
 
 .header-link {
   color: white;
   text-decoration: none;
   margin-right: 10px;
+}
+
+/* Стили для SidebarMenu */
+.menu-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.sidebar-menu {
+  position: absolute;
+  top: 50px;
+  left: 10px;
+  background-color: #333;
+  border-radius: 8px;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+.sidebar-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar-menu li {
+  padding: 10px 15px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.sidebar-menu li:hover {
+  background-color: #444;
 }

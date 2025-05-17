@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './Header.css';
 import { FaSearch } from 'react-icons/fa';
+import SidebarMenu from './SidebarMenu'; // Добавил импорт всплывающего меню
 
 const Header = () => {
   const location = useLocation();
@@ -14,12 +15,12 @@ const Header = () => {
   return (
     <header className="header-container">
       <div className="left-section">
+        <SidebarMenu /> {/* Добавил иконку для меню */}
         <h1 className="logo">ArtFair</h1>
         <nav className="header-nav">
           <Link to="#">Магазин</Link>
           <span className="divider">|</span>
           <Link to="#">Галерея</Link>
-          <span className="divider">|</span>
         </nav>
       </div>
 
