@@ -1,14 +1,39 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import './Header.css';
+import { FaSearch } from 'react-icons/fa';
 
-const Header = () => (
-  <header>
-    <h1>ArtFair</h1>
-    <nav>
-      <Link to="/">Login</Link>
-      <Link to="/register">Register</Link>
-    </nav>
-  </header>
-);
+const Header = () => {
+  const location = useLocation();
+  
+  // Скрываем хедер на страницах регистрации и авторизации
+  if (location.pathname === '/login' || location.pathname === '/register') {
+    return null;
+  }
+
+  return (
+    <header className="header-container">
+      <div className="left-section">
+        <h1 className="logo">ArtFair</h1>
+        <nav className="header-nav">
+          <Link to="#">Магазин</Link>
+          <span className="divider">|</span>
+          <Link to="#">Галерея</Link>
+          <span className="divider">|</span>
+        </nav>
+      </div>
+
+      <div className="search-bar">
+        <FaSearch className="search-icon" />
+        <input type="text" placeholder="Поиск..." />
+      </div>
+
+      <div className="right-section">
+        <Link to="/login" className="header-link">Login</Link>
+        <Link to="/register" className="header-link">Register</Link>
+      </div>
+    </header>
+  );
+};
 
 export default Header;

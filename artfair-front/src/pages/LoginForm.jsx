@@ -1,13 +1,42 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Login = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate(); 
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post('http://localhost:5000/api/login', {
+        username,
+        password,
+      });
+
+      if (response.status === 200) {
+        navigate('/'); // Переход на главную
+      }
+    } catch (error) {
+      console.error("Ошибка при авторизации:", error);
+    }
+  };
+
   return (
     <div className="form-container">
-      <form className="login-form">
+      <form className="login-form" onSubmit={handleSubmit}>
         <h2>Логин</h2>
         <div className="input-field">
-          <input type="text" name="username" required placeholder=" " />
+          <input
+            type="text"
+            name="username"
+            required
+            placeholder=" "
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
           <label>Username</label>
         </div>
         <div className="input-field">
@@ -16,6 +45,8 @@ const Login = () => {
             name="password"
             required
             placeholder=" "
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <label>Password</label>
         </div>
