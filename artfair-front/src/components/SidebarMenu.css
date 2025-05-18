@@ -1,34 +1,108 @@
+/* Кнопка вызова меню (☰) */
 .menu-button {
   font-size: 20px;
   color: white;
   background: none;
   border: none;
+  border-radius: 0;
   cursor: pointer;
   margin-right: 10px;
+  padding: 0;
+  outline: none;
+  box-shadow: none;
+
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+
+  transition: color 0.2s ease, text-shadow 0.2s ease;
 }
 
+/* Подсветка текста при наведении и активности */
+.menu-button:hover,
+.menu-button.active {
+  color: #ccc;
+  text-shadow: 0 0 8px #ccc;
+  background: none !important;
+}
+
+/* Убираем возможную обводку и фон при фокусе */
+.menu-button:focus {
+  outline: none;
+  box-shadow: none;
+  background: none;
+}
+
+/* Затемнение фона при открытом меню */
+.overlay {
+  position: fixed;
+  top: 46px; /* сдвинуто вниз на 10px от 36px */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+  z-index: 99;
+}
+
+.overlay.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Выезжающее меню */
 .sidebar-menu {
-  position: absolute;
-  top: 50px;
-  left: 10px;
-  background-color: #1a1a1a;
-  border-radius: 5px;
-  padding: 10px;
+  position: fixed;
+  top: 46px; /* сдвинуто вниз на 10px */
+  left: 0;
+  width: 225px; /* уменьшили ширину на 1/4 от 300px */
+  height: calc(100vh - 46px); /* высота с учётом сдвига */
+  background-color: #10101a; /* цвет как у хедера */
+  border-left: 1px solid #444;
+  border-right: 1px solid #444;
+  padding: 20px;
   z-index: 100;
+
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
 }
 
+.sidebar-menu.open {
+  transform: translateX(0);
+}
+
+/* Список пунктов меню */
 .sidebar-menu ul {
   list-style: none;
-  margin: 0;
   padding: 0;
+  margin: 0;
 }
 
+/* Пункты меню */
 .sidebar-menu li {
-  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   color: white;
+  font-size: 16px;
+  padding: 10px 5px;
   cursor: pointer;
+  transition: color 0.25s ease, text-shadow 0.25s ease;
 }
 
+/* Подсветка пунктов меню при наведении — мягкая, как у кнопок */
 .sidebar-menu li:hover {
-  color: #888;
+  color: #ccc;
+  text-shadow: 0 0 6px #ccc;
+}
+
+.sidebar-menu hr {
+  border: none;
+  border-top: 1px solid #444;
+  width: calc(100% - 30px); /* вычитаем 15px с каждой стороны */
+  margin: 12px 15px;        /* сверху/снизу 12px, слева/справа 15px */
+  box-sizing: content-box;
 }

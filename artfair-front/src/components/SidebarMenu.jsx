@@ -1,4 +1,14 @@
 import { useState } from "react";
+import {
+  FaUser,
+  FaRegEnvelope,
+  FaHeart,
+  FaShoppingCart,
+  FaPen,
+  FaPalette,
+  FaCog,
+  FaSignOutAlt
+} from "react-icons/fa";
 import "./SidebarMenu.css";
 
 const SidebarMenu = () => {
@@ -8,22 +18,39 @@ const SidebarMenu = () => {
     setIsOpen(!isOpen);
   };
 
+  const closeMenu = () => {
+    setIsOpen(false);
+  };
+
   return (
-    <div>
-      <button className="menu-button" onClick={toggleMenu}>
+    <>
+      <button
+        className={`menu-button ${isOpen ? "active" : ""}`}
+        onClick={toggleMenu}
+      >
         ☰
       </button>
-      {isOpen && (
-        <div className="sidebar-menu">
-          <ul>
-            <li>Профиль</li>
-            <li>Настройки</li>
-            <li>Избранное</li>
-            <li>Выход</li>
-          </ul>
-        </div>
-      )}
-    </div>
+
+      <div
+        className={`overlay ${isOpen ? "visible" : ""}`}
+        onClick={closeMenu}
+      />
+
+      <nav className={`sidebar-menu ${isOpen ? "open" : ""}`}>
+        <ul>
+          <li><FaUser /> Profile</li>
+          <li><FaRegEnvelope /> Subscriptions</li>
+          <li><FaHeart /> Favorites</li>
+          <li><FaShoppingCart /> Shop</li>
+          <hr />
+          <li><FaPen /> Add Article</li>
+          <li><FaPalette /> Add Art</li>
+          <hr />
+          <li><FaCog /> Settings</li>
+          <li><FaSignOutAlt /> Logout</li>
+        </ul>
+      </nav>
+    </>
   );
 };
 
