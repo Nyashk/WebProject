@@ -2,7 +2,7 @@
   background-color: #10101a;
   min-height: 100vh;
   color: white;
-  padding: 20px;
+  padding: 80px 20px 20px 20px; /* Сдвинул вниз на 80px, чтобы не накладывалось на хедер */
 }
 
 .filters {

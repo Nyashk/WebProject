@@ -7,7 +7,6 @@ import SidebarMenu from './SidebarMenu';
 const Header = () => {
   const location = useLocation();
   
-  // Скрываем хедер на страницах регистрации и авторизации
   if (location.pathname === '/login' || location.pathname === '/register') {
     return null;
   }
@@ -18,23 +17,24 @@ const Header = () => {
         <SidebarMenu />
         <h1 className="logo">ArtFair</h1>
         <nav className="header-nav">
-          <Link to="#">Магазин</Link>
+          <Link to="#">Shop</Link>
           <span className="divider">|</span>
-          <Link to="#">Галерея</Link>
+          <Link to="#">Gallery</Link>
           <span className="divider">|</span>
-          <Link to="#">Статьи</Link>
+          <Link to="#">Articles</Link>
         </nav>
       </div>
 
       <div className="search-bar">
         <FaSearch className="search-icon" />
-        <input type="text" placeholder="Поиск..." />
+        <input type="text" placeholder="Search..." />
       </div>
 
       <div className="right-section">
-        <Link to="/login" className="header-link">Login</Link>
-        <Link to="/register" className="header-link">Register</Link>
-      </div>
+  <Link to="/register" className="header-link">Sign Up</Link>
+  <Link to="/login" className="sign-in-link">Sign In</Link>
+</div>
+
     </header>
   );
 };
