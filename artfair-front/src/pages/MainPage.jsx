@@ -1,40 +1,68 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../MainPage.css';
+import ArtworksList from '../components/ArtworksList';
+
+// Массив статей с указанием тегов/фильтров, к которым они относятся
+const articles = [
+  { id: 1, title: "How to Improve Your Digital Art", summary: "Learn key tips and techniques to enhance your digital art skills effectively.", link: "#", filters: ["All", "Digital Painting", "Popular"] },
+  { id: 2, title: "Top 10 AI Art Tools", summary: "Explore the best AI tools that can boost your creative process in 2025.", link: "#", filters: ["All", "AI Drawings", "Popular"] },
+  { id: 3, title: "Creating Anime Characters", summary: "A step-by-step guide on designing engaging anime characters.", link: "#", filters: ["All", "Anime", "Portraits"] },
+  { id: 4, title: "Landscape Painting Basics", summary: "Understand the fundamentals of painting breathtaking landscapes.", link: "#", filters: ["All", "Landscapes", "Traditional"] },
+  { id: 5, title: "3D Modeling Tips", summary: "Improve your 3D modeling skills with these practical tips.", link: "#", filters: ["All", "3D"] },
+];
 
 const MainPage = () => {
-  const filters = [
-    "Все",
-    "AI рисунки",
-    "Портреты",
-    "Популярные",
-    "Последние работы",
-    "Аниме",
-    "3D",
-    "Раскадровка",
-    "Пейзажи",
-    "Графика"
-  ];
+  const [activeFilter, setActiveFilter] = useState("All");
+
+  // Обработчик выбора фильтра, чтобы менять активный фильтр
+  const handleFilterClick = (filter) => {
+    setActiveFilter(filter);
+  };
+
+  // Фильтруем статьи, оставляем максимум 3 на активный фильтр
+  const filteredArticles = articles
+    .filter(article => article.filters.includes(activeFilter))
+    .slice(0, 3);
 
   return (
     <div className="main-container">
-      <div className="filters">
-        {filters.map((filter, index) => (
-          <div key={index} className="filter-item">
-            {filter}
-          </div>
+      {/* Фильтры с передачей события клика */}
+      <div className="filters-wrapper">
+        <ArtworksList activeFilter={activeFilter} onFilterClick={handleFilterClick} />
+      </div>
+
+      {/* Статьи */}
+      <div className="articles-row">
+        {filteredArticles.map(article => (
+          <a
+            href={article.link}
+            key={article.id}
+            className="article-block"
+            tabIndex={0}
+          >
+            <div className="article-bg" />
+            <h3 className="article-title">{article.title}</h3>
+            <p className="article-summary">{article.summary}</p>
+          </a>
         ))}
       </div>
 
+      {/* Текущий фильтр */}
+      <div className="current-filter-label">
+        Showing artworks for filter: <span className="filter-name">{activeFilter}</span>
+      </div>
+
+      {/* Галерея */}
       <div className="gallery">
-        <div className="gallery-item">
-          <img src="https://via.placeholder.com/200" alt="Artwork 1" />
-        </div>
-        <div className="gallery-item">
-          <img src="https://via.placeholder.com/200" alt="Artwork 2" />
-        </div>
-        <div className="gallery-item">
-          <img src="https://via.placeholder.com/200" alt="Artwork 3" />
-        </div>
+        {[1, 2, 3, 4, 5, 6, 7, 8].map(id => (
+          <div key={id} className={`gallery-item item-${id}`}>
+            <img
+              src={`https://picsum.photos/id/${id + 30}/400/300`}
+              alt={`Artwork ${id}`}
+              loading="lazy"
+            />
+          </div>
+        ))}
       </div>
     </div>
   );
