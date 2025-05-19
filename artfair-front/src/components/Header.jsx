@@ -15,7 +15,10 @@ const Header = () => {
     <header className="header-container">
       <div className="left-section">
         <SidebarMenu />
-        <h1 className="logo">ArtFair</h1>
+        
+        {/* Логотип как ссылка на /main */}
+        <Link to="/main" className="logo">ArtFair</Link>
+
         <nav className="header-nav">
           <Link to="#">Shop</Link>
           <span className="divider">|</span>
@@ -31,10 +34,9 @@ const Header = () => {
       </div>
 
       <div className="right-section">
-  <Link to="/register" className="header-link">Sign Up</Link>
-  <Link to="/login" className="sign-in-link">Sign In</Link>
-</div>
-
+        <Link to="/register" className="header-link">Sign Up</Link>
+        <Link to="/login" className="sign-in-link">Sign In</Link>
+      </div>
     </header>
   );
 };
