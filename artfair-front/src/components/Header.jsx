@@ -1,34 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './Header.css';
-import { FaSearch } from 'react-icons/fa';
 import SidebarMenu from './SidebarMenu';
+import { FaSearch } from 'react-icons/fa';
 
 const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const getInitialQuery = () => {
-    const params = new URLSearchParams(location.search);
-    return location.pathname === '/search' ? params.get('q') || '' : '';
-  };
-
-  const [searchTerm, setSearchTerm] = useState(getInitialQuery());
-
-  // Очистка строки поиска при переходе на другие страницы, кроме /search
   useEffect(() => {
-    if (location.pathname !== '/search') {
-      setSearchTerm('');
-    } else {
-      const params = new URLSearchParams(location.search);
-      setSearchTerm(params.get('q') || '');
-    }
+    setIsAuthenticated(localStorage.getItem("isAuthenticated"));
   }, [location]);
 
-  const onKeyDown = (e) => {
-    if (e.key === 'Enter' && searchTerm.trim()) {
-      navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
-    }
+  const handleLogout = () => {
+    localStorage.removeItem("isAuthenticated");
+    setIsAuthenticated(false);
+    navigate('/login');
   };
 
   if (['/login', '/register'].includes(location.pathname)) return null;
@@ -41,7 +29,7 @@ const Header = () => {
         <nav className="header-nav">
           <Link to="#">Shop</Link>
           <span className="divider">|</span>
-          <Link to="/gallery">Gallery</Link> {/* <-- Переход на страницу галереи */}
+          <Link to="#">Gallery</Link>
           <span className="divider">|</span>
           <Link to="#">Articles</Link>
         </nav>
@@ -49,18 +37,20 @@ const Header = () => {
 
       <div className="search-bar">
         <FaSearch className="search-icon" />
-        <input
-          type="text"
-          placeholder="Search..."
-          value={searchTerm}
-          onChange={e => setSearchTerm(e.target.value)}
-          onKeyDown={onKeyDown}
-        />
+        <input type="text" placeholder="Search..." />
       </div>
 
       <div className="right-section">
-        <Link to="/register" className="header-link">Sign Up</Link>
-        <Link to="/login" className="sign-in-link">Sign In</Link>
+        {isAuthenticated ? (
+          <button onClick={handleLogout} className="header-link">
+            Logout
+          </button>
+        ) : (
+          <>
+            <Link to="/register" className="header-link">Sign Up</Link>
+            <Link to="/login" className="sign-in-link">Sign In</Link>
+          </>
+        )}
       </div>
     </header>
   );

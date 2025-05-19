@@ -1,27 +1,19 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    try {
-      const response = await axios.post('http://localhost:5000/api/login', {
-        username,
-        password,
-      });
+    // Имитируем успешный вход
+    localStorage.setItem("isAuthenticated", "true");
+    localStorage.setItem("currentUser", JSON.stringify({ username, email: username + '@example.com' }));
 
-      if (response.status === 200) {
-        navigate('/'); // Переход на главную
-      }
-    } catch (error) {
-      console.error("Ошибка при авторизации:", error);
-    }
+    navigate('/user'); // Переходим на страницу пользователя
   };
 
   return (

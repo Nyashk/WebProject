@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 
 const Register = () => {
   const [username, setUsername] = useState('');
@@ -8,22 +7,14 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    try {
-      const response = await axios.post('http://localhost:5000/api/register', {
-        username,
-        email,
-        password,
-      });
+    // Имитируем успешную регистрацию
+    localStorage.setItem("isAuthenticated", "true");
+    localStorage.setItem("currentUser", JSON.stringify({ username, email }));
 
-      if (response.status === 201) {
-        navigate('/'); // Переход на главную
-      }
-    } catch (error) {
-      console.error("Ошибка при регистрации:", error);
-    }
+    navigate('/user'); // Переходим на страницу пользователя
   };
 
   return (
