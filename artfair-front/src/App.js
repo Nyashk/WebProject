@@ -3,24 +3,26 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import Login from './pages/LoginForm';
 import Register from './pages/RegisterForm';
 import MainPage from './pages/MainPage';
+import SearchPage from './pages/SearchPage';
 import NotFoundPage from './pages/NotFoundPage';
 import Header from './components/Header';
 import './styles.css';
 
 const AppContent = () => {
   const location = useLocation();
-  const showHeader = location.pathname !== '/login' && location.pathname !== '/register';
+  const showHeader = !['/login', '/register'].includes(location.pathname);
 
   return (
     <>
       {showHeader && <Header />}
       <div className="app-container">
         <Routes>
-          <Route path="/" element={<Navigate to="/main" />} /> {/* Редирект на главную */}
+          <Route path="/" element={<Navigate to="/main" replace />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/main" element={<MainPage />} />
-          <Route path="*" element={<NotFoundPage />} /> {/* 404 страница */}
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>
     </>
