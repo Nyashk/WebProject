@@ -4,6 +4,7 @@ import Login from './pages/LoginForm';
 import Register from './pages/RegisterForm';
 import MainPage from './pages/MainPage';
 import SearchPage from './pages/SearchPage';
+import GalleryPage from './pages/GalleryPage'; // <-- импортируем новую страницу
 import NotFoundPage from './pages/NotFoundPage';
 import Header from './components/Header';
 import './styles.css';
@@ -22,6 +23,7 @@ const AppContent = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/main" element={<MainPage />} />
           <Route path="/search" element={<SearchPage />} />
+          <Route path="/gallery" element={<GalleryPage />} /> {/* <-- Добавил роут */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>

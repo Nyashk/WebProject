@@ -41,7 +41,7 @@ const Header = () => {
         <nav className="header-nav">
           <Link to="#">Shop</Link>
           <span className="divider">|</span>
-          <Link to="#">Gallery</Link>
+          <Link to="/gallery">Gallery</Link> {/* <-- Переход на страницу галереи */}
           <span className="divider">|</span>
           <Link to="#">Articles</Link>
         </nav>
