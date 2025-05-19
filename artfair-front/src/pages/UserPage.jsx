@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import '../components/UserPage.css';
 import defaultAvatar from '../assets/images/user-avatar.png';
+import { useNavigate } from 'react-router-dom';
 
 const UserPage = () => {
   const [user, setUser] = useState(null);
   const [activeFilter, setActiveFilter] = useState('all');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const userData = {
@@ -24,10 +26,14 @@ const UserPage = () => {
     setActiveFilter(filter);
   };
 
+  const goToGallery = () => {
+    navigate('/gallery');
+  };
+
   return (
-    <div className="user-page">
+    <div className="user-page" style={{ backgroundColor: '#10101a', minHeight: '100vh', color: 'white' }}>
       <div className="profile-section">
-        <div className="profile-header">
+        <div className="profile-header large">
           <img 
             src={defaultAvatar} 
             alt="User Avatar" 
@@ -68,10 +74,20 @@ const UserPage = () => {
             </button>
           </div>
         </div>
+        <hr className="divider" />
+
         <div className="artwork-grid">
-          <div className="artwork-item">Здесь будут работы художника...</div>
-          <div className="artwork-item">Здесь будут работы художника...</div>
-          <div className="artwork-item">Здесь будут работы художника...</div>
+          {[1, 2, 3].map((id) => (
+            <div key={id} className="artwork-item">
+              <img src={`https://picsum.photos/id/${id + 20}/400/300`} alt={`Artwork ${id}`} />
+            </div>
+          ))}
+        </div>
+
+        <div className="gallery-button-wrapper">
+          <button className="go-gallery-button" onClick={goToGallery}>
+            Перейти в галерею
+          </button>
         </div>
       </div>
     </div>

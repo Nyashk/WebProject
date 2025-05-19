@@ -6,6 +6,7 @@ import MainPage from './pages/MainPage';
 import SearchPage from './pages/SearchPage';
 import NotFoundPage from './pages/NotFoundPage';
 import Header from './components/Header';
+import ArtDetailPage from './pages/ArtDetailPage'; 
 // ProtectedRoute временно не используем
 import UserPage from './pages/UserPage';
 import './styles.css';
@@ -26,6 +27,7 @@ const AppContent = () => {
           <Route path="/search" element={<SearchPage />} />
           {/* Убираем защиту, просто показываем страницу пользователя */}
           <Route path="/user" element={<UserPage />} />
+          <Route path="/art/:id" element={<ArtDetailPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../MainPage.css';
 import ArtworksList from '../components/ArtworksList';
 
-// Массив статей с указанием тегов/фильтров, к которым они относятся
 const articles = [
   { id: 1, title: "How to Improve Your Digital Art", summary: "Learn key tips and techniques to enhance your digital art skills effectively.", link: "#", filters: ["All", "Digital Painting", "Popular"] },
   { id: 2, title: "Top 10 AI Art Tools", summary: "Explore the best AI tools that can boost your creative process in 2025.", link: "#", filters: ["All", "AI Drawings", "Popular"] },
@@ -13,25 +13,26 @@ const articles = [
 
 const MainPage = () => {
   const [activeFilter, setActiveFilter] = useState("All");
+  const navigate = useNavigate();
 
-  // Обработчик выбора фильтра, чтобы менять активный фильтр
   const handleFilterClick = (filter) => {
     setActiveFilter(filter);
   };
 
-  // Фильтруем статьи, оставляем максимум 3 на активный фильтр
   const filteredArticles = articles
     .filter(article => article.filters.includes(activeFilter))
     .slice(0, 3);
 
+  const handleArtworkClick = (id) => {
+    navigate(`/art/${id}`);
+  };
+
   return (
     <div className="main-container">
-      {/* Фильтры с передачей события клика */}
       <div className="filters-wrapper">
         <ArtworksList activeFilter={activeFilter} onFilterClick={handleFilterClick} />
       </div>
 
-      {/* Статьи */}
       <div className="articles-row">
         {filteredArticles.map(article => (
           <a
@@ -47,15 +48,18 @@ const MainPage = () => {
         ))}
       </div>
 
-      {/* Текущий фильтр */}
       <div className="current-filter-label">
         Showing artworks for filter: <span className="filter-name">{activeFilter}</span>
       </div>
 
-      {/* Галерея */}
       <div className="gallery">
         {[1, 2, 3, 4, 5, 6, 7, 8].map(id => (
-          <div key={id} className={`gallery-item item-${id}`}>
+          <div
+            key={id}
+            className={`gallery-item item-${id}`}
+            onClick={() => handleArtworkClick(id)}
+            style={{ cursor: 'pointer' }}
+          >
             <img
               src={`https://picsum.photos/id/${id + 30}/400/300`}
               alt={`Artwork ${id}`}
