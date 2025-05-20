@@ -10,6 +10,7 @@ import Header from './components/Header';
 import ArtDetailPage from './pages/ArtDetailPage';
 import UserPage from './pages/UserPage';
 import UserProfile from './pages/UserProfile';
+import UploadArtPage from './pages/UploadArtPage';
 
 import './styles.css';
 
@@ -32,13 +33,9 @@ const AppContent = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/main" element={<MainPage />} />
           <Route path="/search" element={<SearchPage />} />
-
-          {/* 🔐 Личная страница текущего пользователя */}
           <Route path="/me" element={<UserPage />} />
-
-          {/* 🌐 Публичный профиль любого пользователя */}
           <Route path="/user/:username" element={<UserProfileWrapper />} />
-
+          <Route path="/upload" element={<UploadArtPage />} />  
           <Route path="/art/:id" element={<ArtDetailPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

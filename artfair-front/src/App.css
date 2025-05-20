@@ -1,14 +1,22 @@
-body {
+/* Сделать весь документ прокручиваемым */
+html, body {
   margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 0;
+  min-height: 100%;
+  height: auto;
   background-color: #f4f4f4;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-y: auto;
 }
 
+/* Основной контейнер приложения */
 .app-container {
   text-align: center;
   padding: 20px;
+  box-sizing: border-box;
 }
 
+/* Секция форм (например, регистрация / вход) */
 .form-section {
   display: flex;
   justify-content: center;
