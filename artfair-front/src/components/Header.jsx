@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './Header.css';
 import SidebarMenu from './SidebarMenu';
-import { FaSearch } from 'react-icons/fa';
+import { FaSearch, FaBell } from 'react-icons/fa';  // импорт иконки уведомлений
 
 const Header = () => {
   const location = useLocation();
@@ -11,7 +11,7 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    setIsAuthenticated(localStorage.getItem("isAuthenticated"));
+    setIsAuthenticated(localStorage.getItem("isAuthenticated") === "true");
   }, [location]);
 
   useEffect(() => {
@@ -22,6 +22,7 @@ const Header = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("isAuthenticated");
+    localStorage.removeItem("currentUser");
     setIsAuthenticated(false);
     navigate('/login');
   };
@@ -59,9 +60,10 @@ const Header = () => {
 
       <div className="right-section">
         {isAuthenticated ? (
-          <button onClick={handleLogout} className="header-link">
-            Logout
-          </button>
+          // Показываем иконку уведомлений вместо кнопок
+          <Link to="/notifications" className="notification-icon" title="Уведомления">
+            <FaBell size={20} color="#fff" />
+          </Link>
         ) : (
           <div className="auth-links">
             <Link to="/register" className="header-link">Sign Up</Link>

@@ -111,3 +111,17 @@
 .sign-in-link:hover {
   background-color: #222;
 }
+
+.notification-icon {
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 4px 10px;
+  height: 30px;
+  margin-right: 40px;
+}
+
+.notification-icon:hover {
+  color: #aaa;
+}

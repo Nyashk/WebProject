@@ -15,12 +15,12 @@ const LoginForm = () => {
     e.preventDefault();
     try {
       const res = await loginUser(form);
-      // По ответу от бэка сохраняем состояние
+      // Сохраняем состояние авторизации
       localStorage.setItem('isAuthenticated', 'true');
       localStorage.setItem('currentUser', JSON.stringify(res.data.user));
       setMessage(`Добро пожаловать, ${res.data.user.username}`);
-      // Переходим в личный кабинет
-      navigate('/me');
+      // Переходим на главную страницу
+      navigate('/main');
     } catch (err) {
       setMessage(err.response?.data?.error || 'Ошибка при входе');
     }

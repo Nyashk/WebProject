@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { registerUser } from '../api/auth';
 
 const RegisterForm = () => {
-  const [form, setForm]     = useState({ username: '', email: '', password: '' });
+  const [form, setForm] = useState({ username: '', email: '', password: '' });
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
@@ -15,15 +15,13 @@ const RegisterForm = () => {
     e.preventDefault();
     try {
       const res = await registerUser(form);
-      // По ответу от бэка сохраняем состояние
       localStorage.setItem('isAuthenticated', 'true');
       localStorage.setItem('currentUser', JSON.stringify({
         username: form.username,
         email: form.email,
       }));
       setMessage(res.data.message);
-      // Переходим в личный кабинет
-      navigate('/me');
+      navigate('/main');  // Переходим на главную страницу
     } catch (err) {
       setMessage(err.response?.data?.error || 'Ошибка при регистрации');
     }
