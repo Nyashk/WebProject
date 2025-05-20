@@ -1,0 +1,131 @@
+.user-profile {
+  padding: 20px;
+  padding-top: 40px; /* опускаем профиль ниже */
+}
+
+.profile-section {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.profile-header.large {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+}
+
+.profile-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.profile-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.profile-info h2 {
+  margin: 0 0 10px 0;
+  font-size: 28px;
+}
+
+.stats {
+  display: flex;
+  gap: 30px;
+  font-size: 16px;
+  opacity: 0.8;
+}
+
+.subscribe-button {
+  padding: 4px 10px;
+  font-size: 13px;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: transparent;
+  border: 1px solid #5a8dee;
+  color: #5a8dee;
+  white-space: nowrap;
+  height: fit-content;
+  transition: all 0.3s ease;
+}
+
+.subscribe-button:hover {
+  background-color: rgba(90, 141, 238, 0.1);
+}
+
+.subscribe-button.subscribed {
+  color: #ff5c5c;
+  border-color: #ff5c5c;
+}
+
+.subscribe-button.subscribed:hover {
+  background-color: rgba(255, 92, 92, 0.1);
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #444;
+  margin: 20px 0;
+}
+
+.artworks-section {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+}
+
+.filters {
+  display: flex;
+  gap: 15px;
+}
+
+.filter-button {
+  background: none;
+  border: 1px solid transparent;
+  color: white;
+  padding: 6px 15px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.filter-button.active,
+.filter-button:hover {
+  border-color: #5a8dee;
+  background-color: #3a4d7a;
+}
+
+.artwork-grid {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: start;
+}
+
+.artwork-item {
+  flex: 1 1 30%;
+  max-width: 30%;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.artwork-item:hover {
+  transform: scale(1.05);
+}
+
+.artwork-item img {
+  width: 100%;
+  display: block;
+  border-radius: 10px;
+}

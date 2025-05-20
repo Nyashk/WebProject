@@ -26,7 +26,7 @@ const SidebarMenu = () => {
 
   const goToProfile = () => {
     closeMenu();
-    navigate('/user');
+    navigate('/me');
   };
 
   return (

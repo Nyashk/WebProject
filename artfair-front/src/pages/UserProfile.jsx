@@ -1,26 +1,42 @@
 import React, { useEffect, useState } from 'react'; 
-import '../components/UserPage.css';
+import '../components/UserProfile.css';
 import defaultAvatar from '../assets/images/user-avatar.png';
 import { useNavigate } from 'react-router-dom';
 
-const UserPage = () => {
+const getCurrentUser = () => {
+  return 'ArtistName'; // Заглушка: заменить на реальную авторизацию
+};
+
+const UserProfile = ({ userId }) => {
   const [user, setUser] = useState(null);
+  const [isSubscribed, setIsSubscribed] = useState(false);
   const [activeFilter, setActiveFilter] = useState('all');
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userData = {
-      username: "ArtistName",
-      posts: 34,
-      followers: 120,
-      following: 58,
+    const currentUser = getCurrentUser();
+    if (userId === currentUser) {
+      navigate('/me', { replace: true });
+      return;
+    }
+
+    const fetchedUser = {
+      username: userId,
+      posts: 20,
+      followers: 50,
+      following: 10,
     };
-    setUser(userData);
-  }, []);
+    setUser(fetchedUser);
+    setIsSubscribed(false);
+  }, [userId, navigate]);
 
   if (!user) {
     return <div className="loading">Загрузка...</div>;
   }
+
+  const handleSubscribe = () => {
+    setIsSubscribed(!isSubscribed);
+  };
 
   const handleFilterClick = (filter) => {
     setActiveFilter(filter);
@@ -31,21 +47,25 @@ const UserPage = () => {
   };
 
   return (
-    <div className="user-page" style={{ backgroundColor: '#10101a', minHeight: '100vh', color: 'white' }}>
+    <div className="user-profile" style={{ backgroundColor: '#10101a', minHeight: '100vh', color: 'white' }}>
       <div className="profile-section">
         <div className="profile-header large">
-          <img 
-            src={defaultAvatar} 
-            alt="User Avatar" 
-            className="profile-avatar"
-          />
-          <div className="profile-info">
-            <h2>{user.username}</h2>
-            <div className="stats">
-              <span>{user.posts} Публикаций</span>
-              <span>{user.followers} Подписчиков</span>
-              <span>{user.following} Подписок</span>
+          <img src={defaultAvatar} alt="User Avatar" className="profile-avatar" />
+          <div className="profile-info-row">
+            <div className="profile-info">
+              <h2>{user.username}</h2>
+              <div className="stats">
+                <span>{user.posts} publications</span>
+                <span>{user.followers} subscribers</span>
+                <span>{user.following} subscriptions</span>
+              </div>
             </div>
+            <button 
+              className={`subscribe-button ${isSubscribed ? 'subscribed' : ''}`}
+              onClick={handleSubscribe}
+            >
+              {isSubscribed ? 'Unsubscribe' : 'Subscribe'}
+            </button>
           </div>
         </div>
         <hr className="divider" />
@@ -78,8 +98,8 @@ const UserPage = () => {
 
         <div className="artwork-grid">
           {[1, 2, 3].map((id) => (
-            <div key={id} className="artwork-item" onClick={() => openArt(id)} style={{ cursor: 'pointer' }}>
-              <img src={`https://picsum.photos/id/${id + 20}/400/300`} alt={`Artwork ${id}`} />
+            <div key={id} className="artwork-item" onClick={() => openArt(id)}>
+              <img src={`https://picsum.photos/id/${id + 30}/400/300`} alt={`Artwork ${id}`} />
             </div>
           ))}
         </div>
@@ -88,4 +108,4 @@ const UserPage = () => {
   );
 };
 
-export default UserPage;
+export default UserProfile;

@@ -2,50 +2,53 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 5px 15px;
-  height: 35px;
+  height: 45px;
+  padding: 5px 20px;
   background-color: #10101a;
   border-bottom: 1px solid #444;
+  font-family: Arial, sans-serif;
 }
 
 .left-section {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 20px;
 }
 
 .logo {
   color: #ffffff;
   font-size: 20px;
   cursor: pointer;
-  margin-left: -10px;
+  text-decoration: none;
 }
 
 .header-nav {
   display: flex;
-  gap: 25px;
+  align-items: center;
+  gap: 30px; /* было 10px, стало 20px */
 }
+
 
 .header-nav a {
   color: #ffffff;
-  font-size: 16px;
   text-decoration: none;
+  font-size: 16px;
+  height: 30px;
+  display: flex;
+  align-items: center;
 }
 
-.divider {
-  color: #ffffff;
-  font-size: 16px;
-}
+/* Удалён класс .divider */
 
 .search-bar {
   display: flex;
   align-items: center;
-  background-color: transparent;
   border: 1px solid #555;
   border-radius: 5px;
-  padding: 3px 8px;
+  padding: 4px 10px;
   color: #ffffff;
-  margin-left: -720px; /* Сдвиг поиска ближе к "Articles" */
+  max-width: 250px;
+  margin-left: -750px; /* Можно подкорректировать по необходимости */
 }
 
 .search-bar input {
@@ -54,33 +57,57 @@
   color: #ffffff;
   outline: none;
   font-size: 16px;
+  width: 100%;
 }
 
 .search-icon {
-  margin-right: 5px;
+  margin-right: 8px;
   color: #ffffff;
   font-size: 16px;
 }
 
 .right-section {
   display: flex;
-  gap: 15px;
-  margin-right: 30px; /* Было 8px → подвинуло блок левее на 10px */
   align-items: center;
+}
+
+/* Новый контейнер для ссылок регистрации и входа */
+.auth-links {
+  display: flex;
+  gap: 15px;       /* расстояние между Sign Up и Sign In */
+  margin-right: 40px; /* отступ от правого края */
 }
 
 .header-link {
   color: #ffffff;
   text-decoration: none;
   font-size: 16px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 4px 10px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+}
+
+.header-link:hover {
+  text-decoration: underline;
 }
 
 .sign-in-link {
   border: 1px solid #555;
-  padding: 3px 8px;
+  padding: 4px 10px;
   border-radius: 5px;
   font-size: 16px;
   color: #ffffff;
   text-decoration: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  height: 30px;
 }
 
+.sign-in-link:hover {
+  background-color: #222;
+}

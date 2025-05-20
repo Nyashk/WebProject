@@ -42,8 +42,11 @@
   margin: 10px 0 0.5rem;
 }
 
-.author {
-  color: #bbb;
+/* Avatar + Author inline */
+.author-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   margin-bottom: 1rem;
 }
 
@@ -53,6 +56,21 @@
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #333;
+}
+
+.author {
+  margin: 0;
+  font-size: 2rem; /* Увеличено в 2 раза */
+  font-weight: 600;
+}
+
+.author a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.author a:hover {
+  text-decoration: underline;
 }
 
 .description {
@@ -71,7 +89,7 @@
   padding: 0.4rem 0.7rem;
   border-radius: 16px;
   font-size: 0.9rem;
-  color: #4ecdc4;
+  color: #fff;
 }
 
 .icons {
@@ -82,7 +100,7 @@
 
 .icon {
   font-size: 1.4rem;
-  color: #4ecdc4;
+  color: #fff;
   cursor: pointer;
   transition: transform 0.2s ease;
 }
@@ -101,4 +119,11 @@
   background: #10101a;
   padding: 20px;
   border-radius: 8px;
+  margin-top: 2rem;
+  border: 1px solid #333;
+}
+
+.comments-section h3 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
 }

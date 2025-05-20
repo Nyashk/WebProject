@@ -3,7 +3,6 @@ import { useParams, Link } from 'react-router-dom';
 import { FaHeart, FaStar } from 'react-icons/fa';
 import '../components/ArtDetailPage.css';
 
-// Temporary mock data
 const dummyArtworks = [
   {
     id: '1',
@@ -36,36 +35,39 @@ const ArtDetailPage = () => {
   return (
     <div className="art-detail-page">
       <div className="art-container">
-        {/* Left side with artwork */}
         <div className="art-left">
           <img src={artwork.imageUrl} alt={artwork.title} className="art-image" />
         </div>
 
-        {/* Right side with info */}
         <div className="art-right">
           <div className="art-info">
-            <img src={artwork.avatar} alt="avatar" className="author-avatar" />
+            <div className="author-info">
+              <img src={artwork.avatar} alt="avatar" className="author-avatar" />
+              <p className="author">
+                <Link to={`/user/${artwork.author}`}>{artwork.author}</Link>
+              </p>
+            </div>
             <h1>{artwork.title}</h1>
-            <p className="author">by <Link to="/user">{artwork.author}</Link></p>
             <p className="description">{artwork.description}</p>
+
             <div className="hashtags">
               {artwork.hashtags.map((tag, idx) => (
                 <span key={idx} className="tag">{tag}</span>
               ))}
             </div>
+
             <div className="icons">
               <FaHeart className="icon" />
               <FaStar className="icon" />
             </div>
+
+            <hr className="section-divider" />
+            <div className="comments-section">
+              <h3>Comments</h3>
+              <p>User comments will appear here...</p>
+            </div>
           </div>
         </div>
-      </div>
-
-      {/* Comments section */}
-      <hr className="section-divider" />
-      <div className="comments-section">
-        <h3>Comments</h3>
-        <p>User comments will appear here...</p>
       </div>
     </div>
   );

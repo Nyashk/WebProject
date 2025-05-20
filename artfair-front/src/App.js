@@ -1,15 +1,22 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useParams } from 'react-router-dom'; // добавлен useParams
+
 import Login from './pages/LoginForm';
 import Register from './pages/RegisterForm';
 import MainPage from './pages/MainPage';
 import SearchPage from './pages/SearchPage';
 import NotFoundPage from './pages/NotFoundPage';
 import Header from './components/Header';
-import ArtDetailPage from './pages/ArtDetailPage'; 
-// ProtectedRoute временно не используем
+import ArtDetailPage from './pages/ArtDetailPage';
 import UserPage from './pages/UserPage';
+import UserProfile from './pages/UserProfile';
+
 import './styles.css';
+
+const UserProfileWrapper = () => {
+  const { username } = useParams();
+  return <UserProfile userId={username} />;
+};
 
 const AppContent = () => {
   const location = useLocation();
@@ -25,8 +32,13 @@ const AppContent = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/main" element={<MainPage />} />
           <Route path="/search" element={<SearchPage />} />
-          {/* Убираем защиту, просто показываем страницу пользователя */}
-          <Route path="/user" element={<UserPage />} />
+
+          {/* 🔐 Личная страница текущего пользователя */}
+          <Route path="/me" element={<UserPage />} />
+
+          {/* 🌐 Публичный профиль любого пользователя */}
+          <Route path="/user/:username" element={<UserProfileWrapper />} />
+
           <Route path="/art/:id" element={<ArtDetailPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

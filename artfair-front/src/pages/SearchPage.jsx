@@ -14,8 +14,8 @@ const mockData = {
     { id: 3, title: 'Creating Anime Characters' },
   ],
   artworks: [
-    { id: 1, title: 'Sunset Over Mountains' },
-    { id: 2, title: 'Cyberpunk Cityscape' },
+    { id: 1, title: 'Sunset in the Hills' },
+    { id: 2, title: 'Dreamscape AI' },
   ],
 };
 
@@ -26,7 +26,6 @@ const SearchPage = () => {
   const [activeFilter, setActiveFilter] = useState('all');
   const [results, setResults] = useState({});
 
-  // При изменении q — фильтруем
   useEffect(() => {
     if (!q.trim()) {
       setResults({});
@@ -50,6 +49,11 @@ const SearchPage = () => {
         : [];
 
   const anyFound = Object.values(results).some(arr => arr.length > 0);
+
+  // Обработчик клика для перехода на детальную страницу арта (если это artwork)
+  const onArtworkClick = (id) => {
+    navigate(`/art/${id}`);
+  };
 
   return (
     <div className="search-page-wrapper">
@@ -82,10 +86,18 @@ const SearchPage = () => {
                   <ul>
                     {filteredList(key).map(item => (
                       <li key={item.id}>
-                        {/* Кликабельная заглушка */}
-                        <a href={`#/${key}/${item.id}`}>
-                          {item.name || item.title}
-                        </a>
+                        {key === 'artworks' ? (
+                          <button
+                            className="link-button"
+                            onClick={() => onArtworkClick(item.id.toString())}
+                          >
+                            {item.title}
+                          </button>
+                        ) : (
+                          <a href={`#/${key}/${item.id}`}>
+                            {item.name || item.title}
+                          </a>
+                        )}
                       </li>
                     ))}
                   </ul>
