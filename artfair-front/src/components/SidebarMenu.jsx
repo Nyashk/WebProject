@@ -14,19 +14,19 @@ import "./SidebarMenu.css";
 
 const SidebarMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate();  
+  const navigate = useNavigate();
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const closeMenu = () => {
-    setIsOpen(false);
-  };
+  const toggleMenu = () => setIsOpen(!isOpen);
+  const closeMenu = () => setIsOpen(false);
 
   const goToProfile = () => {
     closeMenu();
     navigate('/me');
+  };
+
+  const goToUpload = () => {
+    closeMenu();
+    navigate('/upload');
   };
 
   return (
@@ -45,7 +45,7 @@ const SidebarMenu = () => {
           <li><FaShoppingCart /> Shop</li>
           <hr />
           <li><FaPen /> Add Article</li>
-          <li><FaPalette /> Add Art</li>
+          <li onClick={goToUpload}><FaPalette /> Add Art</li> {/* <-- обновлено */}
           <hr />
           <li><FaCog /> Settings</li>
           <li><FaSignOutAlt /> Logout</li>
