@@ -1,16 +1,18 @@
 const jwt = require('jsonwebtoken');
+const JWT_SECRET = process.env.JWT_SECRET || 'your-strong-secret-key';
 
-module.exports = function authMiddleware(req, res, next) {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) {
-    return res.status(401).json({ error: 'Токен не предоставлен' });
+module.exports = function(req, res, next) {
+  const token = req.header('x-auth-token') || req.headers.authorization?.split(' ')[1];
+  
+  if (!token) {
+    return res.status(401).json({ error: 'Доступ запрещен. Токен не предоставлен.' });
   }
-  const token = authHeader.split(' ')[1];
-  jwt.verify(token, process.env.JWT_SECRET, (err, payload) => {
-    if (err) {
-      return res.status(403).json({ error: 'Неверный или просроченный токен' });
-    }
-    req.user = payload; // payload содержит { id: ... }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = decoded;
     next();
-  });
+  } catch (err) {
+    return res.status(403).json({ error: 'Неверный или просроченный токен' });
+  }
 };

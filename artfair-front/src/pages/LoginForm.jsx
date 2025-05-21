@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { loginUser } from '../api/auth';
+import '../styles.css';
 
 const LoginForm = () => {
-  const [form, setForm]     = useState({ email: '', password: '' });
+  const [form, setForm] = useState({ email: '', password: '' });
   const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -13,24 +15,28 @@ const LoginForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setMessage('');
+    
     try {
       const res = await loginUser(form);
-      // Сохраняем состояние авторизации
-      localStorage.setItem('isAuthenticated', 'true');
+      localStorage.setItem('token', res.data.token);
       localStorage.setItem('currentUser', JSON.stringify(res.data.user));
       setMessage(`Добро пожаловать, ${res.data.user.username}`);
-      // Переходим на главную страницу
-      navigate('/main');
+      navigate('/');
     } catch (err) {
       setMessage(err.response?.data?.error || 'Ошибка при входе');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="form-container">
+      <div className="background"></div>
       <form className="login-form" onSubmit={handleSubmit}>
-        <h2>Логин</h2>
-
+        <h2>Вход в систему</h2>
+        
         <div className="input-field">
           <input
             name="email"
@@ -55,11 +61,14 @@ const LoginForm = () => {
           <label>Password</label>
         </div>
 
-        <button type="submit">Login</button>
-        {message && <p className="form-message">{message}</p>}
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? 'Вход...' : 'Войти'}
+        </button>
+
+        {message && <p className="message">{message}</p>}
 
         <p className="register-link">
-          Нет аккаунта? <Link to="/register">Регистрация</Link>
+          Нет аккаунта? <Link to="/register">Зарегистрируйтесь</Link>
         </p>
       </form>
     </div>

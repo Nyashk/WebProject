@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { registerUser } from '../api/auth';
+import '../styles.css';
 
 const RegisterForm = () => {
   const [form, setForm] = useState({ username: '', email: '', password: '' });
   const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -13,25 +15,28 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setMessage('');
+
     try {
       const res = await registerUser(form);
-      localStorage.setItem('isAuthenticated', 'true');
-      localStorage.setItem('currentUser', JSON.stringify({
-        username: form.username,
-        email: form.email,
-      }));
-      setMessage(res.data.message);
-      navigate('/main');  // Переходим на главную страницу
+      localStorage.setItem('token', res.data.token);
+      localStorage.setItem('currentUser', JSON.stringify(res.data.user));
+      setMessage('Регистрация прошла успешно!');
+      navigate('/');
     } catch (err) {
       setMessage(err.response?.data?.error || 'Ошибка при регистрации');
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  return (
+ return (
     <div className="form-container">
+      <div className="background"></div>
       <form className="register-form" onSubmit={handleSubmit}>
         <h2>Регистрация</h2>
-
+        
         <div className="input-field">
           <input
             name="username"
@@ -68,11 +73,14 @@ const RegisterForm = () => {
           <label>Password</label>
         </div>
 
-        <button type="submit">Register</button>
-        {message && <p className="form-message">{message}</p>}
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? 'Регистрация...' : 'Зарегистрироваться'}
+        </button>
 
-        <p className="register-link">
-          Уже есть аккаунт? <Link to="/login">Логин</Link>
+        {message && <p className="message">{message}</p>}
+
+        <p className="login-link">
+          Уже есть аккаунт? <Link to="/login">Войдите</Link>
         </p>
       </form>
     </div>
