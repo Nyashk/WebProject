@@ -2,29 +2,32 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './Header.css';
 import SidebarMenu from './SidebarMenu';
-import { FaSearch, FaBell } from 'react-icons/fa';  // импорт иконки уведомлений
+import { FaSearch, FaBell, FaUserCircle } from 'react-icons/fa';
+import { logoutUser } from '../api/auth';
 
 const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuth, setIsAuth] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    setIsAuthenticated(localStorage.getItem("isAuthenticated") === "true");
-  }, [location]);
+    const checkAuth = () => {
+      setIsAuth(!!localStorage.getItem('token'));
+    };
+    
+    checkAuth();
+    window.addEventListener('authChange', checkAuth);
+    return () => window.removeEventListener('authChange', checkAuth);
+  }, []);
 
-  useEffect(() => {
-    if (location.pathname !== '/search') {
-      setSearchQuery('');
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+      navigate('/login');
+    } catch (error) {
+      console.error('Ошибка при выходе:', error);
     }
-  }, [location.pathname]);
-
-  const handleLogout = () => {
-    localStorage.removeItem("isAuthenticated");
-    localStorage.removeItem("currentUser");
-    setIsAuthenticated(false);
-    navigate('/login');
   };
 
   const handleKeyDown = (e) => {
@@ -59,11 +62,18 @@ const Header = () => {
       </div>
 
       <div className="right-section">
-        {isAuthenticated ? (
-          // Показываем иконку уведомлений вместо кнопок
-          <Link to="/notifications" className="notification-icon" title="Уведомления">
-            <FaBell size={20} color="#fff" />
-          </Link>
+        {isAuth ? (
+          <div className="auth-links">
+            <Link to="/notifications" className="notification-icon" title="Уведомления">
+              <FaBell size={20} color="#fff" />
+            </Link>
+            <Link to="/me" className="user-profile" title="Профиль">
+              <FaUserCircle size={22} color="#fff" />
+            </Link>
+            <button onClick={handleLogout} className="logout-button">
+              Выйти
+            </button>
+          </div>
         ) : (
           <div className="auth-links">
             <Link to="/register" className="header-link">Sign Up</Link>

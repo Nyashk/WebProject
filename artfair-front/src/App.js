@@ -27,8 +27,8 @@ const UserProfileWrapper = () => {
 };
 
 const AppContent = () => {
-  const location   = useLocation();
-  const hideOn     = ['/login', '/register'];
+  const location = useLocation();
+  const hideOn = ['/login', '/register'];
   const showHeader = !hideOn.includes(location.pathname);
 
   return (
@@ -36,16 +36,16 @@ const AppContent = () => {
       {showHeader && <Header />}
       <div className="app-container">
         <Routes>
-          <Route path="/"         element={<Navigate to="/main" replace />} />
-          <Route path="/login"    element={<LoginForm />} />
+          <Route path="/" element={<Navigate to="/main" replace />} />
+          <Route path="/login" element={<LoginForm />} />
           <Route path="/register" element={<RegisterForm />} />
-          <Route path="/main"     element={<MainPage />} />
-          <Route path="/search"   element={<SearchPage />} />
-          <Route path="/me"       element={<UserPage />} />
+          <Route path="/main" element={<MainPage />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="/me" element={<UserPage />} />
           <Route path="/user/:username" element={<UserProfileWrapper />} />
-          <Route path="/upload"   element={<UploadArtPage />} />
-          <Route path="/art/:id"  element={<ArtDetailPage />} />
-          <Route path="*"          element={<NotFoundPage />} />
+          <Route path="/upload" element={<UploadArtPage />} />
+          <Route path="/art/:id" element={<ArtDetailPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>
     </>

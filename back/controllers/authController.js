@@ -6,32 +6,32 @@ const SALT_ROUNDS = 10;
 const JWT_SECRET = process.env.JWT_SECRET || 'your-strong-secret-key';
 
 exports.register = async (req, res) => {
-  const { username, email, password } = req.body;
-
-  if (!username || !email || !password) {
-    return res.status(400).json({ error: 'Все поля обязательны' });
-  }
-
   try {
+    const { username, email, password } = req.body;
+
+    // 1. Проверяем, нет ли уже пользователя с таким email
     const existingUser = await userModel.findUserByEmail(email);
     if (existingUser) {
-      return res.status(409).json({ error: 'Email уже зарегистрирован' });
+      return res.status(400).json({ message: 'Пользователь с таким email уже существует' });
     }
 
+    // 2. Хешируем пароль и создаём
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
-    const newUser = await userModel.createUser({ 
-      username, 
-      email, 
-      password: hashedPassword 
+    const newUser = await userModel.createUser({
+      username,
+      email,
+      password: hashedPassword
     });
 
+    // 3. Генерируем JWT
     const token = jwt.sign(
       { id: newUser.id, email: newUser.email },
       JWT_SECRET,
       { expiresIn: '24h' }
     );
 
-    return res.status(201).json({ 
+    // 4. Возвращаем клиенту и token, и объект user
+    return res.status(201).json({
       message: 'Регистрация успешна',
       token,
       user: {
@@ -40,28 +40,28 @@ exports.register = async (req, res) => {
         email: newUser.email
       }
     });
-  } catch (err) {
-    console.error('Ошибка регистрации:', err);
-    return res.status(500).json({ error: 'Ошибка сервера' });
+
+  } catch (error) {
+    console.error('Ошибка при регистрации:', error);
+    return res.status(500).json({ message: 'Ошибка сервера при регистрации' });
   }
 };
 
 exports.login = async (req, res) => {
-  const { email, password } = req.body;
-
-  if (!email || !password) {
-    return res.status(400).json({ error: 'Email и пароль обязательны' });
-  }
-
   try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email и пароль обязательны' });
+    }
+
     const user = await userModel.findUserByEmail(email);
     if (!user) {
-      return res.status(401).json({ error: 'Неверные учетные данные' });
+      return res.status(401).json({ message: 'Неверные учетные данные' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ error: 'Неверные учетные данные' });
+      return res.status(401).json({ message: 'Неверные учетные данные' });
     }
 
     const token = jwt.sign(
@@ -79,28 +79,26 @@ exports.login = async (req, res) => {
         email: user.email
       }
     });
-  } catch (err) {
-    console.error('Ошибка авторизации:', err);
-    return res.status(500).json({ error: 'Ошибка сервера' });
+  } catch (error) {
+    console.error('Ошибка авторизации:', error);
+    return res.status(500).json({ message: 'Ошибка сервера при авторизации' });
   }
+};
+
+exports.logout = async (req, res) => {
+  // Здесь можно добавить логику инвалидирования токена, если нужно
+  return res.status(200).json({ message: 'Выход выполнен успешно' });
 };
 
 exports.checkAuth = async (req, res) => {
   try {
     const user = await userModel.findUserById(req.user.id);
     if (!user) {
-      return res.status(404).json({ error: 'Пользователь не найден' });
+      return res.status(404).json({ message: 'Пользователь не найден' });
     }
-
-    return res.status(200).json({
-      user: {
-        id: user.id,
-        username: user.username,
-        email: user.email
-      }
-    });
-  } catch (err) {
-    console.error('Ошибка проверки авторизации:', err);
-    return res.status(500).json({ error: 'Ошибка сервера' });
+    return res.status(200).json({ user });
+  } catch (error) {
+    console.error('Ошибка проверки авторизации:', error);
+    return res.status(500).json({ message: 'Ошибка сервера при проверке авторизации' });
   }
 };
