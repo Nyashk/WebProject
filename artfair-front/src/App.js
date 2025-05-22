@@ -1,4 +1,6 @@
 import React from 'react';
+import ProtectedRoute from './components/ProtectedRoute';
+
 import {
   BrowserRouter as Router,
   Routes,
@@ -26,6 +28,7 @@ const UserProfileWrapper = () => {
   return <UserProfile userId={username} />;
 };
 
+
 const AppContent = () => {
   const location = useLocation();
   const hideOn = ['/login', '/register'];
@@ -41,9 +44,17 @@ const AppContent = () => {
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/main" element={<MainPage />} />
           <Route path="/search" element={<SearchPage />} />
-          <Route path="/me" element={<UserPage />} />
+          <Route path="/me" element={
+  <ProtectedRoute>
+    <UserPage />
+  </ProtectedRoute>
+} />
           <Route path="/user/:username" element={<UserProfileWrapper />} />
-          <Route path="/upload" element={<UploadArtPage />} />
+          <Route path="/upload" element={
+  <ProtectedRoute>
+    <UploadArtPage />
+  </ProtectedRoute>
+} />
           <Route path="/art/:id" element={<ArtDetailPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
