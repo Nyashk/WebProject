@@ -67,9 +67,7 @@ const Header = () => {
             <Link to="/notifications" className="notification-icon" title="Уведомления">
               <FaBell size={20} color="#fff" />
             </Link>
-            <Link to="/me" className="user-profile" title="Профиль">
-              <FaUserCircle size={22} color="#fff" />
-            </Link>
+            
             <button onClick={handleLogout} className="logout-button">
               Выйти
             </button>

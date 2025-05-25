@@ -50,7 +50,6 @@ const SearchPage = () => {
 
   const anyFound = Object.values(results).some(arr => arr.length > 0);
 
-  // Обработчик клика для перехода на детальную страницу арта (если это artwork)
   const onArtworkClick = (id) => {
     navigate(`/art/${id}`);
   };

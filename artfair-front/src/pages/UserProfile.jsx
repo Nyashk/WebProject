@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react'; 
+import React, { useEffect, useState } from 'react';
 import '../components/UserProfile.css';
 import defaultAvatar from '../assets/images/user-avatar.png';
 import { useNavigate } from 'react-router-dom';
 
-const getCurrentUser = () => {
-  return 'ArtistName'; // Заглушка: заменить на реальную авторизацию
-};
+const getCurrentUser = () => 'ArtistName';
 
 const UserProfile = ({ userId }) => {
   const [user, setUser] = useState(null);
@@ -19,87 +17,75 @@ const UserProfile = ({ userId }) => {
       navigate('/me', { replace: true });
       return;
     }
-
-    const fetchedUser = {
+    // Тут будет запрос к API за информацией
+    setUser({
       username: userId,
-      posts: 20,
-      followers: 50,
-      following: 10,
-    };
-    setUser(fetchedUser);
-    setIsSubscribed(false);
+      avatarUrl: defaultAvatar,
+      backgroundUrl: '', // можно добавить фон
+      postsCount: 20,
+      followersCount: 50,
+      followingCount: 10,
+    });
   }, [userId, navigate]);
 
-  if (!user) {
-    return <div className="loading">Загрузка...</div>;
-  }
+  if (!user) return <div className="loading">Загрузка...</div>;
 
-  const handleSubscribe = () => {
-    setIsSubscribed(!isSubscribed);
-  };
-
-  const handleFilterClick = (filter) => {
-    setActiveFilter(filter);
-  };
-
-  const openArt = (id) => {
-    navigate(`/art/${id}`);
-  };
+  const handleSubscribe = () => setIsSubscribed(!isSubscribed);
+  const openArt = id => navigate(`/art/${id}`);
 
   return (
-    <div className="user-profile" style={{ backgroundColor: '#10101a', minHeight: '100vh', color: 'white' }}>
-      <div className="profile-section">
-        <div className="profile-header large">
-          <img src={defaultAvatar} alt="User Avatar" className="profile-avatar" />
-          <div className="profile-info-row">
-            <div className="profile-info">
-              <h2>{user.username}</h2>
-              <div className="stats">
-                <span>{user.posts} publications</span>
-                <span>{user.followers} subscribers</span>
-                <span>{user.following} subscriptions</span>
-              </div>
+    <div className="user-profile-page">
+      <div
+        className="profile-header large"
+        style={ user.backgroundUrl ? { backgroundImage: `url(${user.backgroundUrl})` } : undefined }
+      >
+        <img
+          src={user.avatarUrl}
+          alt="User Avatar"
+          className="profile-avatar"
+        />
+        <div className="profile-info-row">
+          <div className="profile-info">
+            <h2>{user.username}</h2>
+            <div className="stats">
+              <span>{user.postsCount} publications</span>
+              <span>{user.followersCount} subscribers</span>
+              <span>{user.followingCount} subscriptions</span>
             </div>
-            <button 
-              className={`subscribe-button ${isSubscribed ? 'subscribed' : ''}`}
-              onClick={handleSubscribe}
-            >
-              {isSubscribed ? 'Unsubscribe' : 'Subscribe'}
-            </button>
           </div>
+          <button
+            className={`subscribe-button ${isSubscribed ? 'subscribed' : ''}`}
+            onClick={handleSubscribe}
+          >
+            {isSubscribed ? 'Unsubscribe' : 'Subscribe'}
+          </button>
         </div>
-        <hr className="divider" />
       </div>
 
       <div className="artworks-section">
-        <div className="header">
-          <div className="filters">
-            <button 
-              className={`filter-button ${activeFilter === 'all' ? 'active' : ''}`} 
-              onClick={() => handleFilterClick('all')}
+        <div className="filters">
+          {['all','popular','articles'].map(f => (
+            <button
+              key={f}
+              className={`filter-button ${activeFilter===f?'active':''}`}
+              onClick={()=>setActiveFilter(f)}
             >
-              All works
+              {f==='all'?'All works':f.charAt(0).toUpperCase()+f.slice(1)}
             </button>
-            <button 
-              className={`filter-button ${activeFilter === 'popular' ? 'active' : ''}`} 
-              onClick={() => handleFilterClick('popular')}
-            >
-              Popular
-            </button>
-            <button 
-              className={`filter-button ${activeFilter === 'articles' ? 'active' : ''}`} 
-              onClick={() => handleFilterClick('articles')}
-            >
-              Articles
-            </button>
-          </div>
+          ))}
         </div>
-        <hr className="divider" />
 
         <div className="artwork-grid">
-          {[1, 2, 3].map((id) => (
-            <div key={id} className="artwork-item" onClick={() => openArt(id)}>
-              <img src={`https://picsum.photos/id/${id + 30}/400/300`} alt={`Artwork ${id}`} />
+          {[1,2,3].map(id=>(
+            <div
+              key={id}
+              className="artwork-item"
+              onClick={()=>openArt(id)}
+            >
+              <img
+                src={`https://picsum.photos/id/${id+30}/400/300`}
+                alt={`Artwork ${id}`}
+              />
             </div>
           ))}
         </div>
