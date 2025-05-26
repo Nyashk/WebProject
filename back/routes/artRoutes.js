@@ -4,7 +4,7 @@ const upload = require('../middleware/upload');
 const authMiddleware = require('../middleware/authMiddleware');
 const artController = require('../controllers/artController');
 
-// Загрузить арт (file field name = 'art')
+// Загрузить арт (поле 'art')
 router.post(
   '/upload',
   authMiddleware,

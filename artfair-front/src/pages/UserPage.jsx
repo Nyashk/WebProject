@@ -5,8 +5,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { checkAuth, uploadAvatar, uploadBackground } from '../api/auth';
 import { fetchCurrentUserArtworks, fetchUserArtworksById } from '../api/user';
 
+const API_URL = 'http://localhost:5000'; // для правильного отображения изображений
+
 const UserPage = () => {
-  const { id } = useParams();               // может быть свой или чужой
+  const { id } = useParams();
   const [user, setUser] = useState(null);
   const [artworks, setArtworks] = useState([]);
   const [activeFilter, setActiveFilter] = useState('all');
@@ -14,7 +16,7 @@ const UserPage = () => {
 
   const fetchUserData = useCallback(async () => {
     try {
-      const res = await checkAuth();        // только для своего профиля
+      const res = await checkAuth();
       setUser(res.data.user);
     } catch {
       if (!id) navigate('/login', { replace: true });
@@ -24,10 +26,8 @@ const UserPage = () => {
   const loadArtworks = useCallback(async () => {
     let posts;
     if (!id) {
-      // Если id нет — текущий пользователь
       posts = await fetchCurrentUserArtworks();
     } else {
-      // Иначе — другие пользователь по id
       posts = await fetchUserArtworksById(id);
     }
     setArtworks(posts);
@@ -43,14 +43,12 @@ const UserPage = () => {
   const handleFilterClick = (filter) => setActiveFilter(filter);
   const openArt = (artId) => navigate(`/art/${artId}`);
 
-  // фильтрация (можно доработать)
   const filtered = activeFilter === 'all'
     ? artworks
     : artworks.filter(a => a.title?.toLowerCase().includes(activeFilter));
 
   return (
     <div className="user-page" style={{ backgroundColor: '#10101a', minHeight: '100vh', color: 'white' }}>
-      {/* профиль */}
       {user && (
         <div className="profile-section">
           <div
@@ -68,7 +66,7 @@ const UserPage = () => {
                   📸<input type="file" accept="image/*" onChange={async e => {
                     await uploadAvatar(e.target.files[0]);
                     fetchUserData();
-                  }}/>
+                  }} />
                 </label>
               )}
             </div>
@@ -81,7 +79,6 @@ const UserPage = () => {
         </div>
       )}
 
-      {/* арты */}
       <div className="artworks-section">
         <div className="header">
           <div className="filters">
@@ -111,9 +108,16 @@ const UserPage = () => {
                 onClick={() => openArt(art.id)}
               >
                 <img
-                  src={art.imageUrl}
-                  alt={art.title}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }}
+                  src={art.imageUrl.startsWith('/uploads')
+                    ? `${API_URL}${art.imageUrl}`
+                    : art.imageUrl}
+                  alt={art.title || 'Artwork'}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    borderRadius: '8px'
+                  }}
                 />
               </div>
             ))

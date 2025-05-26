@@ -24,9 +24,8 @@ const UploadArtPage = () => {
       return;
     }
     try {
-      const post = await uploadArt(file, title, description);
-      // после успешной загрузки — на свою страницу профиля
-      navigate(`/user/${post.userId}`);
+      await uploadArt(file, title, description);
+      navigate('/me');
     } catch (err) {
       console.error('Ошибка при публикации арта:', err);
       alert('Не удалось опубликовать арт');

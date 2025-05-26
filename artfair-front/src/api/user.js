@@ -1,11 +1,10 @@
-// src/api/user.js
 import axios from 'axios';
 
 const API = axios.create({
   baseURL: 'http://localhost:5000/api/users',
 });
 
-// добавляем в каждый запрос заголовок Authorization: Bearer <token>
+// Добавляем в каждый запрос заголовок Authorization: Bearer <token>
 API.interceptors.request.use(cfg => {
   const token = localStorage.getItem('token');
   if (token) {

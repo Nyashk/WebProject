@@ -18,25 +18,28 @@ async function getPostsByUser(userId) {
   return rows;
 }
 
-// Создать новый пост (арт)
+// Создать новый пост (арт) и вернуть вместе с username автора
 async function createPost({ userId, imageUrl, title, description }) {
   const [result] = await db.query(
     `INSERT INTO posts (user_id, image_url, title, description)
      VALUES (?, ?, ?, ?)`,
     [userId, imageUrl, title, description]
   );
-  // вернём полный объект
   const postId = result.insertId;
+
+  // Отдаём вместе с username
   const [rows] = await db.query(
     `SELECT 
-       id,
-       user_id AS userId,
-       image_url AS imageUrl,
-       title,
-       description,
-       created_at AS createdAt
-     FROM posts
-     WHERE id = ?`,
+       p.id,
+       p.user_id AS userId,
+       u.username AS username,
+       p.image_url AS imageUrl,
+       p.title,
+       p.description,
+       p.created_at AS createdAt
+     FROM posts p
+     JOIN users u ON u.id = p.user_id
+     WHERE p.id = ?`,
     [postId]
   );
   return rows[0];
