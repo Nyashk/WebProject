@@ -81,29 +81,28 @@
   color: #aaa;
 }
 
-.divider {
-  border: 0.5px solid #333;
-  margin-top: 10px;
-}
-
 .artworks-section {
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 10px;
+   padding-left:  -600px; /* Жёсткий отступ слева */
+  box-sizing: border-box; /* Выровнять всё влево */
 }
 
-.header {
+.header.filters-left {
   display: flex;
   justify-content: flex-start;
-  gap: 15px;
   align-items: center;
-  margin-bottom: 10px;
+  gap: 15px;
+  margin-left: 0;
+  padding-left: 0;
 }
 
 .filters {
   display: flex;
   gap: 10px;
+  margin-left: 0;
 }
 
 .filter-button {
@@ -129,6 +128,9 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 15px;
+  width: 100%;
+  padding-left: 0;
+  margin-left: 0;
 }
 
 .artwork-item {
@@ -140,6 +142,7 @@
   color: #fff;
   border-radius: 8px;
 }
+
 .no-artworks-message {
   grid-column: 1 / -1;
   text-align: center;
@@ -148,3 +151,6 @@
   padding: 40px 0;
 }
 
+hr.divider {
+  display: none; /* Убрана горизонтальная линия */
+}

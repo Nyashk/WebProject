@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { checkAuth, uploadAvatar, uploadBackground } from '../api/auth';
 import { fetchCurrentUserArtworks, fetchUserArtworksById } from '../api/user';
 
-const API_URL = 'http://localhost:5000'; // для правильного отображения изображений
+const API_URL = 'http://localhost:5000';
 
 const UserPage = () => {
   const { id } = useParams();
@@ -48,7 +48,7 @@ const UserPage = () => {
     : artworks.filter(a => a.title?.toLowerCase().includes(activeFilter));
 
   return (
-    <div className="user-page" style={{ backgroundColor: '#10101a', minHeight: '100vh', color: 'white' }}>
+    <div className="user-page">
       {user && (
         <div className="profile-section">
           <div
@@ -73,14 +73,18 @@ const UserPage = () => {
             <div className="profile-info">
               <h2>{user.username}</h2>
               <p className="email">{user.email}</p>
+              <div className="stats">
+                <span>Постов: {artworks.length}</span>
+                <span>Подписчики: {user.followers || 0}</span>
+                <span>Подписки: {user.following || 0}</span>
+              </div>
             </div>
           </div>
-          <hr className="divider" />
         </div>
       )}
 
       <div className="artworks-section">
-        <div className="header">
+        <div className="header filters-left">
           <div className="filters">
             {['all', 'popular', 'articles'].map(f => (
               <button
@@ -93,7 +97,6 @@ const UserPage = () => {
             ))}
           </div>
         </div>
-        <hr className="divider" />
 
         <div className="artwork-grid">
           {filtered.length === 0 ? (
