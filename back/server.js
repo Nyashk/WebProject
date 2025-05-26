@@ -1,23 +1,25 @@
+// D:\2 курс\artfair\back\server.js
 const express = require('express');
-const cors = require('cors');
-const authRoutes = require('./routes/authRoutes');
-require('dotenv').config();
 const path = require('path');
+const cors = require('cors');
+require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
+// --- Middleware ---
 app.use(cors());
 app.use(express.json());
 
-app.use('/api/auth', authRoutes);
-
-app.get('/', (req, res) => {
-  res.send('ArtFair API is running');
-});
-
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
-
+// Статика для загруженных файлов
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// --- Роуты ---
+app.use('/api/auth', require('./routes/authRoutes'));      // ваш authRoutes
+app.use('/api/users', require('./routes/userRoutes'));     // userRoutes.js
+app.use('/api/arts', require('./routes/artRoutes'));       // artRoutes.js (новый)
+
+// --- Запуск ---
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

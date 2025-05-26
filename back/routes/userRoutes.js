@@ -1,36 +1,32 @@
 const express = require('express');
 const router = express.Router();
-const upload = require('../middleware/upload');
-const db = require('../db'); // твое подключение к базе
-const authMiddleware = require('../middleware/auth'); // проверка токена
+const authMiddleware = require('../middleware/authMiddleware');
+const { getPostsByUser } = require('../models/postModel');
 
-// Загрузка аватара
-router.post('/avatar', authMiddleware, upload.single('avatar'), async (req, res) => {
+// Получить арты текущего пользователя (по токену)
+router.get('/me/posts', authMiddleware, async (req, res) => {
   try {
     const userId = req.user.id;
-    const avatarUrl = `/uploads/avatars/${req.file.filename}`;
-    
-    await db.query('UPDATE users SET avatarUrl = ? WHERE id = ?', [avatarUrl, userId]);
-    
-    res.json({ message: 'Аватар обновлён', avatarUrl });
+    const posts = await getPostsByUser(userId);
+    res.json(posts);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Ошибка при загрузке аватара' });
+    console.error('Ошибка при получении артов текущего пользователя:', err);
+    res.status(500).json({ error: 'Не удалось загрузить работы пользователя' });
   }
 });
 
-// Загрузка фонового изображения
-router.post('/background', authMiddleware, upload.single('background'), async (req, res) => {
+// Получить арты пользователя по id
+router.get('/:id/posts', async (req, res) => {
   try {
-    const userId = req.user.id;
-    const backgroundUrl = `/uploads/backgrounds/${req.file.filename}`;
-
-    await db.query('UPDATE users SET backgroundUrl = ? WHERE id = ?', [backgroundUrl, userId]);
-
-    res.json({ message: 'Фон обновлён', backgroundUrl });
+    const userId = parseInt(req.params.id, 10);
+    if (isNaN(userId)) {
+      return res.status(400).json({ error: 'Некорректный id пользователя' });
+    }
+    const posts = await getPostsByUser(userId);
+    res.json(posts);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Ошибка при загрузке фона' });
+    console.error('Ошибка при получении артов пользователя:', err);
+    res.status(500).json({ error: 'Не удалось загрузить работы пользователя' });
   }
 });
 

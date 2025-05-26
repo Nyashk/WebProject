@@ -1,83 +1,61 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../components/UploadArtPage.css';
-
-const CATEGORIES = ['digital', 'traditional', '3d', 'photography', 'fanart'];
+import { uploadArt } from '../api/art';
 
 const UploadArtPage = () => {
-  const [image, setImage] = useState(null);
+  const [file, setFile] = useState(null);
+  const [preview, setPreview] = useState(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [hashtags, setHashtags] = useState('');
+  const navigate = useNavigate();
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImage(URL.createObjectURL(file));
-    }
+  const handleFileChange = (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    setFile(f);
+    setPreview(URL.createObjectURL(f));
   };
 
-  const handleSubmit = () => {
-    if (!image) {
-      alert('Please upload an image before publishing.');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!file) {
+      alert('Пожалуйста, выберите изображение.');
       return;
     }
-
-    const tags = hashtags
-      .split(',')
-      .map(tag => tag.trim().toLowerCase().replace(/^#/, ''));
-
-    const matchingCategories = tags.filter(tag => CATEGORIES.includes(tag));
-
-    const newArt = {
-      image,
-      title,
-      description,
-      hashtags: tags,
-      categories: matchingCategories,
-      author: 'current_user', // replace with current user
-      date: new Date().toISOString()
-    };
-
-    console.log('📦 Art Submitted:', newArt);
-
-    // TODO: send to server and update feeds
+    try {
+      const post = await uploadArt(file, title, description);
+      // после успешной загрузки — на свою страницу профиля
+      navigate(`/user/${post.userId}`);
+    } catch (err) {
+      console.error('Ошибка при публикации арта:', err);
+      alert('Не удалось опубликовать арт');
+    }
   };
 
   return (
     <div className="upload-art-page">
-      <h2>Upload Your Art</h2>
-
-      <div className="upload-section">
-        <input type="file" accept="image/*" onChange={handleImageChange} />
-        {image && <img src={image} alt="preview" className="preview-image" />}
-      </div>
-
-      <input
-        type="text"
-        placeholder="Title (optional)"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        className="input"
-      />
-
-      <textarea
-        placeholder="Description (optional)"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        className="textarea"
-      />
-
-      <input
-        type="text"
-        placeholder="Hashtags (e.g. #digital, #3d)"
-        value={hashtags}
-        onChange={(e) => setHashtags(e.target.value)}
-        className="input"
-      />
-
-      <button onClick={handleSubmit} className="publish-button">
-        Publish
-      </button>
+      <h2>Загрузить арт</h2>
+      <form onSubmit={handleSubmit} className="upload-form">
+        <input type="file" accept="image/*" onChange={handleFileChange} />
+        {preview && <img src={preview} alt="preview" className="preview-image" />}
+        <input
+          type="text"
+          placeholder="Заголовок (необязательно)"
+          value={title}
+          onChange={e => setTitle(e.target.value)}
+          className="input"
+        />
+        <textarea
+          placeholder="Описание (необязательно)"
+          value={description}
+          onChange={e => setDescription(e.target.value)}
+          className="textarea"
+        />
+        <button type="submit" className="publish-button">
+          Опубликовать
+        </button>
+      </form>
     </div>
   );
 };

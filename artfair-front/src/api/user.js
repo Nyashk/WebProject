@@ -1,13 +1,16 @@
+// src/api/user.js
 import axios from 'axios';
 
 const API = axios.create({
   baseURL: 'http://localhost:5000/api/users',
 });
 
-// добавляем токен автоматически
+// добавляем в каждый запрос заголовок Authorization: Bearer <token>
 API.interceptors.request.use(cfg => {
   const token = localStorage.getItem('token');
-  if (token) cfg.headers['x-auth-token'] = token;
+  if (token) {
+    cfg.headers['Authorization'] = `Bearer ${token}`;
+  }
   return cfg;
 });
 
@@ -27,4 +30,14 @@ export const uploadBackground = (file) => {
   return API.post('/background', fd, {
     headers: { 'Content-Type': 'multipart/form-data' }
   });
+};
+
+// Получить арты текущего пользователя
+export const fetchCurrentUserArtworks = () => {
+  return API.get('/me/posts').then(res => res.data);
+};
+
+// Получить арты любого пользователя по id
+export const fetchUserArtworksById = (userId) => {
+  return API.get(`/${userId}/posts`).then(res => res.data);
 };

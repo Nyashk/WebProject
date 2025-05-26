@@ -140,3 +140,11 @@
   color: #fff;
   border-radius: 8px;
 }
+.no-artworks-message {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-size: 16px;
+  color: #888;
+  padding: 40px 0;
+}
+

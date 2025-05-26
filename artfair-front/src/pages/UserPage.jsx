@@ -1,116 +1,97 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import '../components/UserPage.css';
 import defaultAvatar from '../assets/images/user-avatar.png';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { checkAuth, uploadAvatar, uploadBackground } from '../api/auth';
+import { fetchCurrentUserArtworks, fetchUserArtworksById } from '../api/user';
 
 const UserPage = () => {
+  const { id } = useParams();               // может быть свой или чужой
   const [user, setUser] = useState(null);
+  const [artworks, setArtworks] = useState([]);
   const [activeFilter, setActiveFilter] = useState('all');
   const navigate = useNavigate();
 
   const fetchUserData = useCallback(async () => {
     try {
-      const res = await checkAuth();
-      const u = res.data.user;
-      setUser({
-        username: u.username,
-        email: u.email,
-        avatarUrl: u.avatarUrl || defaultAvatar,
-        backgroundUrl: u.backgroundUrl || '',
-        posts: u.posts ?? 0,
-        followers: u.followersCount ?? 0,
-        following: u.followingCount ?? 0,
-      });
-    } catch (err) {
-      console.error('Не удалось загрузить данные пользователя:', err);
-      navigate('/login', { replace: true });
+      const res = await checkAuth();        // только для своего профиля
+      setUser(res.data.user);
+    } catch {
+      if (!id) navigate('/login', { replace: true });
     }
-  }, [navigate]);
+  }, [navigate, id]);
+
+  const loadArtworks = useCallback(async () => {
+    let posts;
+    if (!id) {
+      // Если id нет — текущий пользователь
+      posts = await fetchCurrentUserArtworks();
+    } else {
+      // Иначе — другие пользователь по id
+      posts = await fetchUserArtworksById(id);
+    }
+    setArtworks(posts);
+  }, [id]);
 
   useEffect(() => {
     fetchUserData();
-    window.addEventListener('authChange', fetchUserData);
-    return () => window.removeEventListener('authChange', fetchUserData);
-  }, [fetchUserData]);
+    loadArtworks();
+  }, [fetchUserData, loadArtworks]);
 
-  if (!user) return <div className="loading">Загрузка...</div>;
+  if (!user && !id) return <div className="loading">Загрузка...</div>;
 
   const handleFilterClick = (filter) => setActiveFilter(filter);
-  const openArt = (id) => navigate(`/art/${id}`);
+  const openArt = (artId) => navigate(`/art/${artId}`);
 
-  const handleAvatarChange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const formData = new FormData();
-    formData.append('avatar', file);
-    try {
-      await uploadAvatar(formData);
-      fetchUserData(); // обновить данные
-    } catch (err) {
-      console.error('Ошибка загрузки аватара:', err);
-    }
-  };
-
-  const handleBackgroundChange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const formData = new FormData();
-    formData.append('background', file);
-    try {
-      await uploadBackground(formData);
-      fetchUserData();
-    } catch (err) {
-      console.error('Ошибка загрузки фона:', err);
-    }
-  };
+  // фильтрация (можно доработать)
+  const filtered = activeFilter === 'all'
+    ? artworks
+    : artworks.filter(a => a.title?.toLowerCase().includes(activeFilter));
 
   return (
     <div className="user-page" style={{ backgroundColor: '#10101a', minHeight: '100vh', color: 'white' }}>
-      <div className="profile-section">
-        <div
-          className="profile-header large"
-          style={user.backgroundUrl ? { backgroundImage: `url(${user.backgroundUrl})` } : {}}
-        >
-          <div className="avatar-wrapper">
-            <img
-              src={user.avatarUrl}
-              alt="User Avatar"
-              className="profile-avatar"
-            />
-            <label className="edit-avatar">
-              📸
-              <input type="file" accept="image/*" onChange={handleAvatarChange} />
-            </label>
-          </div>
-
-          <div className="profile-info">
-            <h2>{user.username}</h2>
-            <p className="email">{user.email}</p>
-            <div className="stats">
-              <span>{user.posts} Публикаций</span>
-              <span>{user.followers} Подписчиков</span>
-              <span>{user.following} Подписок</span>
+      {/* профиль */}
+      {user && (
+        <div className="profile-section">
+          <div
+            className="profile-header large"
+            style={user.backgroundUrl ? { backgroundImage: `url(${user.backgroundUrl})` } : {}}
+          >
+            <div className="avatar-wrapper">
+              <img
+                src={user.avatarUrl || defaultAvatar}
+                alt="Avatar"
+                className="profile-avatar"
+              />
+              {id === undefined && (
+                <label className="edit-avatar">
+                  📸<input type="file" accept="image/*" onChange={async e => {
+                    await uploadAvatar(e.target.files[0]);
+                    fetchUserData();
+                  }}/>
+                </label>
+              )}
             </div>
-            <label className="edit-background">
-              🖼️ Сменить фон
-              <input type="file" accept="image/*" onChange={handleBackgroundChange} />
-            </label>
+            <div className="profile-info">
+              <h2>{user.username}</h2>
+              <p className="email">{user.email}</p>
+            </div>
           </div>
+          <hr className="divider" />
         </div>
-        <hr className="divider" />
-      </div>
+      )}
 
+      {/* арты */}
       <div className="artworks-section">
         <div className="header">
           <div className="filters">
-            {['all', 'popular', 'articles'].map((filter) => (
+            {['all', 'popular', 'articles'].map(f => (
               <button
-                key={filter}
-                className={`filter-button ${activeFilter === filter ? 'active' : ''}`}
-                onClick={() => handleFilterClick(filter)}
+                key={f}
+                className={`filter-button ${activeFilter === f ? 'active' : ''}`}
+                onClick={() => handleFilterClick(f)}
               >
-                {filter === 'all' ? 'All works' : filter.charAt(0).toUpperCase() + filter.slice(1)}
+                {f === 'all' ? 'Все работы' : f.charAt(0).toUpperCase() + f.slice(1)}
               </button>
             ))}
           </div>
@@ -118,11 +99,25 @@ const UserPage = () => {
         <hr className="divider" />
 
         <div className="artwork-grid">
-          {[1, 2, 3].map((id) => (
-            <div key={id} className="artwork-item" onClick={() => openArt(id)} style={{ cursor: 'pointer' }}>
-              <img src={`https://picsum.photos/id/${id + 20}/400/300`} alt={`Artwork ${id}`} />
+          {filtered.length === 0 ? (
+            <div className="no-artworks-message">
+              Пользователь ещё ничего не выкладывал
             </div>
-          ))}
+          ) : (
+            filtered.map(art => (
+              <div
+                key={art.id}
+                className="artwork-item"
+                onClick={() => openArt(art.id)}
+              >
+                <img
+                  src={art.imageUrl}
+                  alt={art.title}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }}
+                />
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>
