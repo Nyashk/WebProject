@@ -12,10 +12,23 @@ router.post(
   artController.uploadArt
 );
 
-// Получить арты пользователя по id
+// Получить свои посты
+router.get(
+  '/me/posts',
+  authMiddleware,
+  artController.getMyPosts
+);
+
+// Получить посты любого пользователя
 router.get(
   '/user/:id/posts',
   artController.getUserArtworksByUserId
+);
+
+// Получить один арт по ID
+router.get(
+  '/:id',
+  artController.getArtById
 );
 
 module.exports = router;

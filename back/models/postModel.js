@@ -1,24 +1,31 @@
 const db = require('../config/db');
 
-// Получить все посты (арты) пользователя
+// Список постов пользователя
 async function getPostsByUser(userId) {
   const [rows] = await db.query(
-    `SELECT 
-       id,
-       user_id AS userId,
-       image_url AS imageUrl,
-       title,
-       description,
-       created_at AS createdAt
-     FROM posts
-     WHERE user_id = ?
-     ORDER BY created_at DESC`,
+    `SELECT
+       p.id,
+       p.user_id    AS userId,
+       u.username   AS username,
+       p.image_url  AS imageUrl,
+       p.title,
+       p.description,
+       p.created_at AS createdAt
+     FROM posts p
+     JOIN users u ON u.id = p.user_id
+     WHERE p.user_id = ?
+     ORDER BY p.created_at DESC`,
     [userId]
   );
   return rows;
 }
 
-// Создать новый пост (арт) и вернуть вместе с username автора
+// Список своих постов
+async function getMyPosts(userId) {
+  return getPostsByUser(userId);
+}
+
+// Создать новый пост
 async function createPost({ userId, imageUrl, title, description }) {
   const [result] = await db.query(
     `INSERT INTO posts (user_id, image_url, title, description)
@@ -27,13 +34,13 @@ async function createPost({ userId, imageUrl, title, description }) {
   );
   const postId = result.insertId;
 
-  // Отдаём вместе с username
+  // Вернуть созданный пост
   const [rows] = await db.query(
-    `SELECT 
+    `SELECT
        p.id,
-       p.user_id AS userId,
-       u.username AS username,
-       p.image_url AS imageUrl,
+       p.user_id    AS userId,
+       u.username   AS username,
+       p.image_url  AS imageUrl,
        p.title,
        p.description,
        p.created_at AS createdAt
@@ -45,7 +52,29 @@ async function createPost({ userId, imageUrl, title, description }) {
   return rows[0];
 }
 
+// Получить один пост по ID
+async function getPostById(postId) {
+  const [rows] = await db.query(
+    `SELECT
+       p.id,
+       p.user_id      AS userId,
+       u.username     AS username,
+       u.avatar_url   AS avatarUrl,
+       p.image_url    AS imageUrl,
+       p.title,
+       p.description,
+       p.created_at   AS createdAt
+     FROM posts p
+     JOIN users u ON u.id = p.user_id
+     WHERE p.id = ?`,
+    [postId]
+  );
+  return rows[0] || null;
+}
+
 module.exports = {
   getPostsByUser,
+  getMyPosts,
   createPost,
+  getPostById,
 };
