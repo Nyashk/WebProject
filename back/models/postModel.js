@@ -72,9 +72,29 @@ async function getPostById(postId) {
   return rows[0] || null;
 }
 
+// *** Новая функция: получить все посты ***
+async function getAllPosts() {
+  const [rows] = await db.query(
+    `SELECT
+       p.id,
+       p.user_id      AS userId,
+       u.username     AS username,
+       u.avatar_url   AS avatarUrl,
+       p.image_url    AS imageUrl,
+       p.title,
+       p.description,
+       p.created_at   AS createdAt
+     FROM posts p
+     JOIN users u ON u.id = p.user_id
+     ORDER BY p.created_at DESC`
+  );
+  return rows;
+}
+
 module.exports = {
   getPostsByUser,
   getMyPosts,
   createPost,
   getPostById,
+  getAllPosts
 };

@@ -3,7 +3,8 @@ const {
   getPostsByUser,
   getMyPosts,
   createPost,
-  getPostById
+  getPostById,
+  getAllPosts
 } = require('../models/postModel');
 
 const API_URL = process.env.API_URL || 'http://localhost:5000';
@@ -68,5 +69,16 @@ exports.getArtById = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Не удалось получить арт' });
+  }
+};
+
+// *** Новый: GET /api/arts/ ***
+exports.getAllPosts = async (req, res) => {
+  try {
+    const posts = await getAllPosts();
+    res.json(posts);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Не удалось получить список артов' });
   }
 };

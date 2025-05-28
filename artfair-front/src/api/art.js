@@ -27,3 +27,11 @@ export const uploadArt = (file, title, description) => {
     headers: { 'Content-Type': 'multipart/form-data' }
   }).then(res => res.data);
 };
+
+/**
+ * Получить все арты для галереи
+ * @returns {Promise<Array>}
+ */
+export const fetchArtworks = () =>
+  API.get('/')
+     .then(res => res.data);

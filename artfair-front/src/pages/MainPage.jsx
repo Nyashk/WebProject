@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../MainPage.css';
+import '../components/MainPage.css';
 import ArtworksList from '../components/ArtworksList';
+import { fetchArtworks } from '../api/art';
 
 const articles = [
   { id: 1, title: "How to Improve Your Digital Art", summary: "Learn key tips and techniques to enhance your digital art skills effectively.", link: "#", filters: ["All", "Digital Painting", "Popular"] },
@@ -13,19 +14,28 @@ const articles = [
 
 const MainPage = () => {
   const [activeFilter, setActiveFilter] = useState("All");
+  const [artworks, setArtworks] = useState([]);
+  const [errorImages, setErrorImages] = useState({});
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchArtworks()
+      .then(data => setArtworks(data))
+      .catch(err => console.error("Ошибка при загрузке артов:", err));
+  }, []);
 
   const handleFilterClick = (filter) => {
     setActiveFilter(filter);
   };
 
-  const filteredArticles = articles
-    .filter(article => article.filters.includes(activeFilter))
-    .slice(0, 3);
-
   const handleArtworkClick = (id) => {
     navigate(`/art/${id}`);
   };
+
+  const visibleArtworks = artworks.filter(post =>
+    (activeFilter === "All" || (Array.isArray(post.tags) && post.tags.includes(activeFilter))) &&
+    !errorImages[post.id]
+  );
 
   return (
     <div className="main-container">
@@ -34,17 +44,15 @@ const MainPage = () => {
       </div>
 
       <div className="articles-row">
-        {filteredArticles.map(article => (
-          <a
-            href={article.link}
-            key={article.id}
-            className="article-block"
-            tabIndex={0}
-          >
-            <div className="article-bg" />
-            <h3 className="article-title">{article.title}</h3>
-            <p className="article-summary">{article.summary}</p>
-          </a>
+        {articles
+          .filter(article => article.filters.includes(activeFilter))
+          .slice(0, 3)
+          .map(article => (
+            <a href={article.link} key={article.id} className="article-block" tabIndex={0}>
+              <div className="article-bg" />
+              <h3 className="article-title">{article.title}</h3>
+              <p className="article-summary">{article.summary}</p>
+            </a>
         ))}
       </div>
 
@@ -53,17 +61,19 @@ const MainPage = () => {
       </div>
 
       <div className="gallery">
-        {[1, 2, 3, 4, 5, 6, 7, 8].map(id => (
+        {visibleArtworks.map(art => (
           <div
-            key={id}
-            className={`gallery-item item-${id}`}
-            onClick={() => handleArtworkClick(id)}
-            style={{ cursor: 'pointer' }}
+            key={art.id}
+            className="gallery-item"
+            onClick={() => handleArtworkClick(art.id)}
           >
             <img
-              src={`https://picsum.photos/id/${id + 30}/400/300`}
-              alt={`Artwork ${id}`}
+              src={art.imageUrl}
+              alt={art.title || "Artwork"}
               loading="lazy"
+              onError={() => {
+                setErrorImages(prev => ({ ...prev, [art.id]: true }));
+              }}
             />
           </div>
         ))}

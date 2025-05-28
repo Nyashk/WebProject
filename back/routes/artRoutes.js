@@ -4,6 +4,12 @@ const upload = require('../middleware/upload');
 const authMiddleware = require('../middleware/authMiddleware');
 const artController = require('../controllers/artController');
 
+// *** Новый: получить все арты ***
+router.get(
+  '/',
+  artController.getAllPosts
+);
+
 // Загрузить арт (поле 'art')
 router.post(
   '/upload',
