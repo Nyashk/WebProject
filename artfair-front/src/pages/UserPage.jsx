@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import '../components/UserPage.css';
 import defaultAvatar from '../assets/images/user-avatar.png';
 import { useNavigate, useParams } from 'react-router-dom';
-import { checkAuth, uploadAvatar, uploadBackground } from '../api/auth';
+import { checkAuth, uploadAvatar } from '../api/auth';
 import { fetchCurrentUserArtworks, fetchUserArtworksById } from '../api/user';
 
 const API_URL = 'http://localhost:5000';
@@ -38,7 +38,7 @@ const UserPage = () => {
     loadArtworks();
   }, [fetchUserData, loadArtworks]);
 
-  if (!user && !id) return <div className="loading">Загрузка...</div>;
+  if (!user && !id) return <div className="loading">Loading...</div>;
 
   const handleFilterClick = (filter) => setActiveFilter(filter);
   const openArt = (artId) => navigate(`/art/${artId}`);
@@ -74,58 +74,73 @@ const UserPage = () => {
               <h2>{user.username}</h2>
               <p className="email">{user.email}</p>
               <div className="stats">
-                <span>Постов: {artworks.length}</span>
-                <span>Подписчики: {user.followers || 0}</span>
-                <span>Подписки: {user.following || 0}</span>
+                <span>Posts: {artworks.length}</span>
+                <span>Followers: {user.followersCount || 0}</span>
+                <span>Following: {user.followingCount || 0}</span>
               </div>
             </div>
           </div>
+
+          {/* Разделительная полоса сдвинута сразу под аватар */}
+          <hr className="divider" />
         </div>
       )}
 
-      <div className="artworks-section">
-        <div className="header filters-left">
-          <div className="filters">
-            {['all', 'popular', 'articles'].map(f => (
-              <button
-                key={f}
-                className={`filter-button ${activeFilter === f ? 'active' : ''}`}
-                onClick={() => handleFilterClick(f)}
-              >
-                {f === 'all' ? 'Все работы' : f.charAt(0).toUpperCase() + f.slice(1)}
-              </button>
-            ))}
+      <div className="content-row">
+        <div className="left-column">
+          <div className="artworks-section">
+            <div className="header filters-left">
+              <div className="filters">
+                {['all', 'popular', 'articles'].map(f => (
+                  <button
+                    key={f}
+                    className={`filter-button ${activeFilter === f ? 'active' : ''}`}
+                    onClick={() => handleFilterClick(f)}
+                  >
+                    {f === 'all' ? 'All artworks' : f.charAt(0).toUpperCase() + f.slice(1)}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="artwork-grid">
+              {filtered.length === 0 ? (
+                <div className="no-artworks-message">
+                  This user hasn't uploaded anything yet.
+                </div>
+              ) : (
+                filtered.map(art => (
+                  <div
+                    key={art.id}
+                    className="artwork-item"
+                    onClick={() => openArt(art.id)}
+                  >
+                    <img
+                      src={art.imageUrl.startsWith('/uploads')
+                        ? `${API_URL}${art.imageUrl}`
+                        : art.imageUrl}
+                      alt={art.title || 'Artwork'}
+                    />
+                  </div>
+                ))
+              )}
+            </div>
           </div>
         </div>
 
-        <div className="artwork-grid">
-          {filtered.length === 0 ? (
-            <div className="no-artworks-message">
-              Пользователь ещё ничего не выкладывал
-            </div>
+        <aside className="author-column">
+          <h3>About the author</h3>
+          {user ? (
+            <>
+              <p><b>Username:</b> {user.username}</p>
+              <p><b>Email:</b> {user.email}</p>
+              <p><b>Followers:</b> {user.followersCount || 0}</p>
+              <p><b>Following:</b> {user.followingCount || 0}</p>
+            </>
           ) : (
-            filtered.map(art => (
-              <div
-                key={art.id}
-                className="artwork-item"
-                onClick={() => openArt(art.id)}
-              >
-                <img
-                  src={art.imageUrl.startsWith('/uploads')
-                    ? `${API_URL}${art.imageUrl}`
-                    : art.imageUrl}
-                  alt={art.title || 'Artwork'}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    borderRadius: '8px'
-                  }}
-                />
-              </div>
-            ))
+            <p>Loading author info...</p>
           )}
-        </div>
+        </aside>
       </div>
     </div>
   );

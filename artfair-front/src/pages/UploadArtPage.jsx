@@ -20,39 +20,39 @@ const UploadArtPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!file) {
-      alert('Пожалуйста, выберите изображение.');
+      alert('Please select an image.');
       return;
     }
     try {
       await uploadArt(file, title, description);
       navigate('/me');
     } catch (err) {
-      console.error('Ошибка при публикации арта:', err);
-      alert('Не удалось опубликовать арт');
+      console.error('Error uploading art:', err);
+      alert('Failed to publish art.');
     }
   };
 
   return (
     <div className="upload-art-page">
-      <h2>Загрузить арт</h2>
+      <h2>Upload Your Art</h2>
       <form onSubmit={handleSubmit} className="upload-form">
-        <input type="file" accept="image/*" onChange={handleFileChange} />
+        <input type="file" accept="image/*" onChange={handleFileChange} className="file-input" />
         {preview && <img src={preview} alt="preview" className="preview-image" />}
         <input
           type="text"
-          placeholder="Заголовок (необязательно)"
+          placeholder="Title (optional)"
           value={title}
           onChange={e => setTitle(e.target.value)}
           className="input"
         />
         <textarea
-          placeholder="Описание (необязательно)"
+          placeholder="Description (optional)"
           value={description}
           onChange={e => setDescription(e.target.value)}
           className="textarea"
         />
         <button type="submit" className="publish-button">
-          Опубликовать
+          Publish
         </button>
       </form>
     </div>
