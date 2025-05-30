@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { FaHeart, FaRegHeart, FaStar } from 'react-icons/fa';
@@ -16,6 +16,8 @@ const ArtDetailPage = () => {
   const [comment, setComment] = useState('');
   const [liked, setLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
+  const [isPortrait, setIsPortrait] = useState(false);
+  const imgRef = useRef(null);
   const maxCommentLength = 250;
 
   useEffect(() => {
@@ -36,6 +38,14 @@ const ArtDetailPage = () => {
 
     fetchArtwork();
   }, [id]);
+
+  // Проверяем ориентацию изображения после загрузки
+  const handleImageLoad = () => {
+    if (imgRef.current) {
+      const { naturalWidth, naturalHeight } = imgRef.current;
+      setIsPortrait(naturalHeight > naturalWidth);
+    }
+  };
 
   const handleSendComment = () => {
     if (comment.trim()) {
@@ -64,9 +74,11 @@ const ArtDetailPage = () => {
       <div className="art-container">
         <div className="art-left">
           <img
+            ref={imgRef}
             src={artwork.imageUrl.startsWith('/uploads') ? `${API_URL}${artwork.imageUrl}` : artwork.imageUrl}
             alt={artwork.title}
-            className="art-image"
+            className={`art-image ${isPortrait ? 'portrait' : ''}`}
+            onLoad={handleImageLoad}
           />
         </div>
 

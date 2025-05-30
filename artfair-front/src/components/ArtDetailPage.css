@@ -25,6 +25,12 @@
   object-fit: contain;
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  transition: max-height 0.3s ease;
+}
+
+/* Увеличение размера в 1.5 раза для вертикальных изображений */
+.art-image.portrait {
+  max-height: 120vh; /* 80vh * 1.5 = 120vh */
 }
 
 .art-right {

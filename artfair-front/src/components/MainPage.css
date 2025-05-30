@@ -12,6 +12,29 @@
   margin-top: 10px;
 }
 
+.filter-button {
+  background-color: transparent;
+  border: 1px solid #ccc;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  margin-right: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-button:hover {
+  background-color: rgba(255, 215, 100, 0.15);
+  border-color: #ffedb8;
+}
+
+.filter-button.active {
+  background-color: rgba(255, 215, 100, 0.25);
+  border-color: #fff0c1;
+  color: #ffe8a3;
+  font-weight: bold;
+}
+
 /* === Статьи === */
 .articles-row {
   display: flex;
@@ -37,13 +60,14 @@
 }
 
 .article-block:hover {
-  box-shadow: 0 0 15px #646cff;
+  box-shadow: 0 0 15px rgba(255, 238, 185, 0.8); /* золотистое свечение */
 }
 
 .article-bg {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(135deg, #2a2a4e 0%, #1a1a2e 100%);
+  background-size: cover;
+  background-position: center;
   filter: brightness(0.9);
   transition: filter 0.3s ease;
 }
@@ -52,6 +76,16 @@
   filter: brightness(1);
 }
 
+/* Градиент слева направо */
+.article-block::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(to right, rgba(16,16,26,0.7) 0%, rgba(16,16,26,0.0) 60%);
+  z-index: 0;
+}
+
+/* Текст статьи */
 .article-title {
   position: relative;
   padding: 15px;
@@ -61,12 +95,15 @@
 }
 
 .article-summary {
-  position: relative;
-  padding: 0 15px;
+  position: absolute;
+  bottom: 12px;
+  left: 15px;
+  right: 15px;
   font-size: 14px;
   z-index: 1;
 }
 
+/* === Метка активного фильтра === */
 .current-filter-label {
   font-size: 16px;
   margin-bottom: 15px;
@@ -74,16 +111,15 @@
 }
 
 .filter-name {
-  color: #646cff;
+  color: #ffeebb;
   font-weight: 700;
 }
 
-/* === Галерея (7 квадратов, с боковыми отступами 15px) === */
+/* === Галерея === */
 .gallery {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 12px;
-  /* добавляем 15px слева и справа */
   padding: 0 15px;
   box-sizing: border-box;
   margin-bottom: 40px;
