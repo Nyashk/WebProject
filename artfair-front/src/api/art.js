@@ -35,3 +35,12 @@ export const uploadArt = (file, title, description) => {
 export const fetchArtworks = () =>
   API.get('/')
      .then(res => res.data);
+
+// Новый метод переключения лайка
+export const toggleLike = (postId) => {
+  return axios.post(`http://localhost:5000/api/likes/${postId}/toggle`, null, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token') || ''}`
+    }
+  }).then(res => res.data);
+};

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
-import { FaHeart, FaStar } from 'react-icons/fa';
+import { FaHeart, FaRegHeart, FaStar } from 'react-icons/fa';
 import { FiSend } from 'react-icons/fi';
 import '../components/ArtDetailPage.css';
+import { toggleLike } from '../api/art';
 
 const API_URL = 'http://localhost:5000';
 
@@ -13,6 +14,8 @@ const ArtDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [comment, setComment] = useState('');
+  const [liked, setLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(0);
   const maxCommentLength = 250;
 
   useEffect(() => {
@@ -21,6 +24,8 @@ const ArtDetailPage = () => {
         const res = await axios.get(`${API_URL}/api/arts/${id}`);
         setArtwork(res.data);
         setError(null);
+        setLikesCount(res.data.likes || 0);
+        setLiked(false); // Можно потом запросить, лайкал ли юзер (если есть API)
       } catch (err) {
         setError('Artwork not found');
         setArtwork(null);
@@ -36,6 +41,17 @@ const ArtDetailPage = () => {
     if (comment.trim()) {
       console.log("Отправка комментария:", comment);
       setComment('');
+    }
+  };
+
+  const handleToggleLike = async () => {
+    try {
+      if (!artwork) return;
+      const res = await toggleLike(artwork.id);
+      setLiked(res.liked);
+      setLikesCount(res.likesCount);
+    } catch (err) {
+      console.error('Ошибка при лайке', err);
     }
   };
 
@@ -72,8 +88,8 @@ const ArtDetailPage = () => {
           <p className="description">{artwork.description}</p>
 
           <div className="meta">
-            <div className="likes">
-              <FaHeart className="icon" /> {artwork.likes || 0}
+            <div className="likes" onClick={handleToggleLike} style={{ cursor: 'pointer', userSelect: 'none' }}>
+              {liked ? <FaHeart className="icon liked" /> : <FaRegHeart className="icon" />} {likesCount}
             </div>
             <div className="rating">
               <FaStar className="icon" /> {artwork.rating || 0}

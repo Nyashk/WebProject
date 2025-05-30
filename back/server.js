@@ -15,7 +15,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Роуты
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
-app.use('/api/arts', require('./routes/artRoutes')); // Новый роут для артов
+app.use('/api/arts', require('./routes/artRoutes'));
+app.use('/api/likes', require('./routes/likeRoutes')); // новый роут лайков
 
 // Запуск сервера
 const PORT = process.env.PORT || 5000;
