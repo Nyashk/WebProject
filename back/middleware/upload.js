@@ -11,7 +11,6 @@ const ensureUploadPath = (folder) => {
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // Если поле называется 'art' — складываем в 'arts'
     const folder = file.fieldname === 'art'
       ? 'arts'
       : file.fieldname === 'avatar'
@@ -23,9 +22,11 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname);
-    const name = `${Date.now()}-${Math.round(Math.random()*1e9)}${ext}`;
+    const name = `${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
     cb(null, name);
   },
 });
 
-module.exports = multer({ storage });
+const upload = multer({ storage });
+
+module.exports = upload;

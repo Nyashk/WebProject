@@ -34,7 +34,6 @@ async function createPost({ userId, imageUrl, title, description }) {
   );
   const postId = result.insertId;
 
-  // Вернуть созданный пост
   const [rows] = await db.query(
     `SELECT
        p.id,
@@ -73,8 +72,11 @@ async function getPostById(postId) {
   return rows[0] || null;
 }
 
-// Получить все посты с количеством лайков
-async function getAllPosts() {
+// Получить все посты с возможностью сортировки
+async function getAllPosts(sortBy = 'created_at') {
+  const orderBy =
+    sortBy === 'popular' ? 'likes DESC, p.created_at DESC' : 'p.created_at DESC';
+
   const [rows] = await db.query(
     `SELECT
        p.id,
@@ -85,10 +87,12 @@ async function getAllPosts() {
        p.title,
        p.description,
        p.created_at   AS createdAt,
-       (SELECT COUNT(*) FROM post_likes WHERE post_id = p.id) AS likes
+       COUNT(pl.user_id) AS likes
      FROM posts p
      JOIN users u ON u.id = p.user_id
-     ORDER BY p.created_at DESC`
+     LEFT JOIN post_likes pl ON pl.post_id = p.id
+     GROUP BY p.id
+     ORDER BY ${orderBy}`
   );
   return rows;
 }

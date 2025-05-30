@@ -4,37 +4,19 @@ const upload = require('../middleware/upload');
 const authMiddleware = require('../middleware/authMiddleware');
 const artController = require('../controllers/artController');
 
-// *** Новый: получить все арты ***
-router.get(
-  '/',
-  artController.getAllPosts
-);
+// Получить все арты (с сортировкой через query ?sort=popular)
+router.get('/', artController.getAllPosts);
 
 // Загрузить арт (поле 'art')
-router.post(
-  '/upload',
-  authMiddleware,
-  upload.single('art'),
-  artController.uploadArt
-);
+router.post('/upload', authMiddleware, upload.single('art'), artController.createPost);
 
 // Получить свои посты
-router.get(
-  '/me/posts',
-  authMiddleware,
-  artController.getMyPosts
-);
+router.get('/me/posts', authMiddleware, artController.getMyPosts);
 
-// Получить посты любого пользователя
-router.get(
-  '/user/:id/posts',
-  artController.getUserArtworksByUserId
-);
+// Получить посты пользователя по ID
+router.get('/user/:userId/posts', artController.getPostsByUser);
 
 // Получить один арт по ID
-router.get(
-  '/:id',
-  artController.getArtById
-);
+router.get('/:id', artController.getPostById);
 
 module.exports = router;

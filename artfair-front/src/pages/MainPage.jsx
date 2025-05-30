@@ -19,10 +19,11 @@ const MainPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchArtworks()
+    const sortParam = activeFilter === "Popular" ? "popular" : "created_at";
+    fetchArtworks(sortParam)
       .then(data => setArtworks(data))
       .catch(err => console.error("Ошибка при загрузке артов:", err));
-  }, []);
+  }, [activeFilter]);
 
   const handleFilterClick = (filter) => {
     setActiveFilter(filter);
@@ -33,7 +34,7 @@ const MainPage = () => {
   };
 
   const visibleArtworks = artworks.filter(post =>
-    (activeFilter === "All" || (Array.isArray(post.tags) && post.tags.includes(activeFilter))) &&
+    (activeFilter === "All" || activeFilter === "Popular" || (Array.isArray(post.tags) && post.tags.includes(activeFilter))) &&
     !errorImages[post.id]
   );
 
@@ -53,7 +54,7 @@ const MainPage = () => {
               <h3 className="article-title">{article.title}</h3>
               <p className="article-summary">{article.summary}</p>
             </a>
-        ))}
+          ))}
       </div>
 
       <div className="current-filter-label">
@@ -66,15 +67,16 @@ const MainPage = () => {
             key={art.id}
             className="gallery-item"
             onClick={() => handleArtworkClick(art.id)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === 'Enter') handleArtworkClick(art.id); }}
           >
             <img
               src={art.imageUrl}
-              alt={art.title || "Artwork"}
-              loading="lazy"
-              onError={() => {
-                setErrorImages(prev => ({ ...prev, [art.id]: true }));
-              }}
+              alt={art.title}
+              onError={() => setErrorImages(prev => ({ ...prev, [art.id]: true }))}
             />
+            <p>{art.title}</p>
           </div>
         ))}
       </div>

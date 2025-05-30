@@ -1,4 +1,3 @@
-require('dotenv').config();
 const {
   getPostsByUser,
   getMyPosts,
@@ -7,78 +6,65 @@ const {
   getAllPosts
 } = require('../models/postModel');
 
-const API_URL = process.env.API_URL || 'http://localhost:5000';
-
-// POST /api/arts/upload
-exports.uploadArt = async (req, res) => {
+exports.getAllPosts = async (req, res) => {
   try {
-    if (!req.user) return res.status(401).json({ error: 'Не авторизован' });
-    if (!req.file) return res.status(400).json({ error: 'Файл не загружен' });
-
-    const imageUrl = `${API_URL}/uploads/arts/${req.file.filename}`;
-    const { title, description } = req.body;
-
-    const post = await createPost({
-      userId: req.user.id,
-      imageUrl,
-      title: title || null,
-      description: description || null,
-    });
-    res.status(201).json(post);
-
+    const sortBy = req.query.sort === 'popular' ? 'popular' : 'created_at';
+    const posts = await getAllPosts(sortBy);
+    res.json(posts);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Ошибка при загрузке арта' });
+    res.status(500).json({ error: 'Не удалось получить список артов' });
   }
 };
 
-// GET /api/arts/me/posts
 exports.getMyPosts = async (req, res) => {
   try {
     const posts = await getMyPosts(req.user.id);
     res.json(posts);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Не удалось получить ваши работы' });
+    res.status(500).json({ error: 'Не удалось получить ваши арты' });
   }
 };
 
-// GET /api/arts/user/:id/posts
-exports.getUserArtworksByUserId = async (req, res) => {
+exports.createPost = async (req, res) => {
+  const { file } = req;
+  const { title, description } = req.body;
+  if (!file) {
+    return res.status(400).json({ error: 'Файл изображения обязателен' });
+  }
+
   try {
-    const userId = parseInt(req.params.id, 10);
-    if (isNaN(userId)) return res.status(400).json({ error: 'Некорректный ID пользователя' });
-    const posts = await getPostsByUser(userId);
-    res.json(posts);
+    const newPost = await createPost({
+      userId: req.user.id,
+      imageUrl: `/uploads/arts/${file.filename}`,
+      title,
+      description
+    });
+    res.status(201).json(newPost);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Не удалось получить работы пользователя' });
+    res.status(500).json({ error: 'Не удалось создать арт' });
   }
 };
 
-// GET /api/arts/:id
-exports.getArtById = async (req, res) => {
+exports.getPostById = async (req, res) => {
   try {
-    const postId = parseInt(req.params.id, 10);
-    if (isNaN(postId)) return res.status(400).json({ error: 'Некорректный ID арта' });
-
-    const post = await getPostById(postId);
+    const post = await getPostById(req.params.id);
     if (!post) return res.status(404).json({ error: 'Арт не найден' });
-
     res.json(post);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Не удалось получить арт' });
+    res.status(500).json({ error: 'Ошибка при получении арта' });
   }
 };
 
-// *** Новый: GET /api/arts/ ***
-exports.getAllPosts = async (req, res) => {
+exports.getPostsByUser = async (req, res) => {
   try {
-    const posts = await getAllPosts();
+    const posts = await getPostsByUser(req.params.userId);
     res.json(posts);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Не удалось получить список артов' });
+    res.status(500).json({ error: 'Не удалось получить арты пользователя' });
   }
 };

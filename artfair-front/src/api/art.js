@@ -4,20 +4,12 @@ const API = axios.create({
   baseURL: 'http://localhost:5000/api/arts',
 });
 
-// Добавляем токен в заголовок Authorization: Bearer <token>
 API.interceptors.request.use(cfg => {
   const token = localStorage.getItem('token');
   if (token) cfg.headers['Authorization'] = `Bearer ${token}`;
   return cfg;
 });
 
-/**
- * Загрузить арт
- * @param {File} file — изображение
- * @param {string} title — заголовок
- * @param {string} description — описание
- * @returns {Promise<Object>} — новый пост с { id, userId, username, imageUrl, ... }
- */
 export const uploadArt = (file, title, description) => {
   const fd = new FormData();
   fd.append('art', file);
@@ -28,15 +20,10 @@ export const uploadArt = (file, title, description) => {
   }).then(res => res.data);
 };
 
-/**
- * Получить все арты для галереи
- * @returns {Promise<Array>}
- */
-export const fetchArtworks = () =>
-  API.get('/')
+export const fetchArtworks = (sort = 'latest') =>
+  API.get(`/?sort=${sort === 'popular' ? 'popular' : 'created_at'}`)
      .then(res => res.data);
 
-// Новый метод переключения лайка
 export const toggleLike = (postId) => {
   return axios.post(`http://localhost:5000/api/likes/${postId}/toggle`, null, {
     headers: {
