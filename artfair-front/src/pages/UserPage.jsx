@@ -17,7 +17,13 @@ const UserPage = () => {
   const fetchUserData = useCallback(async () => {
     try {
       const res = await checkAuth();
-      setUser(res.data.user);
+      const userData = {
+        ...res.data.user,
+        birthdate: res.data.user.birthdate || null,
+        bio: res.data.user.bio || '',
+        createdAt: res.data.user.createdAt || res.data.user.registeredAt || null,
+      };
+      setUser(userData);
     } catch {
       if (!id) navigate('/login', { replace: true });
     }
@@ -46,6 +52,13 @@ const UserPage = () => {
   const filtered = activeFilter === 'all'
     ? artworks
     : artworks.filter(a => a.title?.toLowerCase().includes(activeFilter));
+
+  const formatDate = (dateString) => {
+    if (!dateString) return 'not specified';
+    const date = new Date(dateString);
+    if (isNaN(date)) return 'not specified';
+    return date.toLocaleDateString();
+  };
 
   return (
     <div className="user-page">
@@ -81,7 +94,6 @@ const UserPage = () => {
             </div>
           </div>
 
-          {/* Разделительная полоса сдвинута сразу под аватар */}
           <hr className="divider" />
         </div>
       )}
@@ -132,10 +144,10 @@ const UserPage = () => {
           <h3>About the author</h3>
           {user ? (
             <>
-              <p><b>Username:</b> {user.username}</p>
               <p><b>Email:</b> {user.email}</p>
-              <p><b>Followers:</b> {user.followersCount || 0}</p>
-              <p><b>Following:</b> {user.followingCount || 0}</p>
+              <p><b>Birthdate:</b> {formatDate(user.birthdate)}</p>
+              <p><b>Biography:</b> {user.bio || 'not specified'}</p>
+              <p><b>Registration Date:</b> {formatDate(user.createdAt)}</p>
             </>
           ) : (
             <p>Loading author info...</p>
