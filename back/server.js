@@ -1,3 +1,4 @@
+// server.js (или index.js, как у тебя называется)
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
@@ -16,7 +17,10 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/arts', require('./routes/artRoutes'));
-app.use('/api/likes', require('./routes/likeRoutes')); // новый роут лайков
+app.use('/api/likes', require('./routes/likeRoutes'));
+
+// *** Добавляем роут для поиска ***
+app.use('/api/search', require('./routes/searchRoutes'));
 
 // Запуск сервера
 const PORT = process.env.PORT || 5000;

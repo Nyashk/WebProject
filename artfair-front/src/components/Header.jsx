@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './Header.css';
 import SidebarMenu from './SidebarMenu';
-import { FaSearch, FaBell, FaUserCircle } from 'react-icons/fa';
+import { FaSearch, FaBell } from 'react-icons/fa';
 import { logoutUser } from '../api/auth';
 
 const Header = () => {
@@ -11,22 +11,34 @@ const Header = () => {
   const [isAuth, setIsAuth] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Проверка авторизации
   useEffect(() => {
     const checkAuth = () => {
       setIsAuth(!!localStorage.getItem('token'));
     };
-    
+
     checkAuth();
     window.addEventListener('authChange', checkAuth);
     return () => window.removeEventListener('authChange', checkAuth);
   }, []);
+
+  // Сброс поиска при уходе со страницы поиска
+  useEffect(() => {
+    const path = location.pathname;
+    const params = new URLSearchParams(location.search);
+    if (path === '/search') {
+      setSearchQuery(params.get('q') || '');
+    } else {
+      setSearchQuery('');
+    }
+  }, [location]);
 
   const handleLogout = async () => {
     try {
       await logoutUser();
       navigate('/login');
     } catch (error) {
-      console.error('Ошибка при выходе:', error);
+      console.error('Logout error:', error);
     }
   };
 
@@ -64,12 +76,12 @@ const Header = () => {
       <div className="right-section">
         {isAuth ? (
           <div className="auth-links">
-            <Link to="/notifications" className="notification-icon" title="Уведомления">
+            <Link to="/notifications" className="notification-icon" title="Notifications">
               <FaBell size={20} color="#fff" />
             </Link>
-            
+
             <button onClick={handleLogout} className="logout-button">
-              Выйти
+              Log out
             </button>
           </div>
         ) : (
