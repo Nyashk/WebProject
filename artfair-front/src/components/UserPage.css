@@ -57,7 +57,7 @@
   background-color: #1a1a2a;
   border-radius: 10px;
   padding: 20px;
-  color: #999999;       /* более мягкий серый */
+  color: #999999;      
   font-size: 15px;
   line-height: 1.4;
   box-sizing: border-box;
@@ -67,20 +67,20 @@
   margin-top: 70px;
   overflow-wrap: break-word;
 
-  max-height: 450px;    /* высота вдвое меньше чем 900px */
-  overflow-y: auto;     /* прокрутка при необходимости */
+  max-height: 450px;    
+  overflow-y: auto;     
 }
 
 .author-column h3 {
   font-size: 24px;
-  margin-bottom: 30px;  /* увеличенный отступ */
-  color: white;         /* заголовок белый */
+  margin-bottom: 30px;  
+  color: white;        
 }
 
 .author-column h3 {
   font-size: 24px;
   margin-bottom: 30px;
-  color: #999999; /* Сделали заголовок таким же серым */
+  color: #999999; 
 }
 
 .avatar-wrapper {

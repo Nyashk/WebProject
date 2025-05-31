@@ -1,4 +1,4 @@
-/* Основной контейнер */
+
 .upload-art-page {
   min-height: 100vh;
   padding: 40px 20px;
@@ -11,22 +11,20 @@
   box-sizing: border-box;
 }
 
-/* Заголовок */
+
 .upload-art-page h2 {
   font-size: 28px;
   margin-bottom: 30px;
 }
 
-/* Форма */
 .upload-form {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px; /* Расстояние между элементами формы */
+  gap: 10px; 
   width: 100%;
 }
 
-/* Поле выбора файла */
 .file-input {
   color: white;
   background-color: transparent;
@@ -38,7 +36,6 @@
   width: 100%;
 }
 
-/* Превью картинки */
 .preview-image {
   max-width: 90vw;
   max-height: 600px;
@@ -49,7 +46,6 @@
   object-fit: contain;
 }
 
-/* Текстовые поля */
 .input,
 .textarea {
   width: 100%;
@@ -63,13 +59,11 @@
   box-sizing: border-box;
 }
 
-/* Описание (textarea) */
 .textarea {
   min-height: 100px;
   resize: vertical;
 }
 
-/* Кнопка */
 .publish-button {
   width: 100%;
   max-width: 600px;

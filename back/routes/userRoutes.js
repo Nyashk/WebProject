@@ -3,7 +3,6 @@ const router = express.Router();
 const authMiddleware = require('../middleware/authMiddleware');
 const { getPostsByUser } = require('../models/postModel');
 
-// Получить арты текущего пользователя (по токену)
 router.get('/me/posts', authMiddleware, async (req, res) => {
   try {
     const userId = req.user.id;
@@ -15,7 +14,6 @@ router.get('/me/posts', authMiddleware, async (req, res) => {
   }
 });
 
-// Получить арты пользователя по id
 router.get('/:id/posts', async (req, res) => {
   try {
     const userId = parseInt(req.params.id, 10);

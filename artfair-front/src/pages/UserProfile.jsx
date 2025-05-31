@@ -17,11 +17,11 @@ const UserProfile = ({ userId }) => {
       navigate('/me', { replace: true });
       return;
     }
-    // Тут будет запрос к API за информацией
+    
     setUser({
       username: userId,
       avatarUrl: defaultAvatar,
-      backgroundUrl: '', // можно добавить фон
+      backgroundUrl: '', 
       postsCount: 20,
       followersCount: 50,
       followingCount: 10,

@@ -1,4 +1,3 @@
-/* === Главный контейнер === */
 .main-container {
   background-color: #10101a;
   min-height: 100vh;
@@ -6,7 +5,6 @@
   padding: 60px 20px 20px 20px;
 }
 
-/* === Фильтры === */
 .filters-wrapper {
   margin-bottom: 25px;
   margin-top: 10px;
@@ -35,7 +33,6 @@
   font-weight: bold;
 }
 
-/* === Статьи === */
 .articles-row {
   display: flex;
   gap: 15px;
@@ -60,7 +57,7 @@
 }
 
 .article-block:hover {
-  box-shadow: 0 0 15px rgba(255, 238, 185, 0.8); /* золотистое свечение */
+  box-shadow: 0 0 15px rgba(255, 238, 185, 0.8);
 }
 
 .article-bg {
@@ -76,7 +73,6 @@
   filter: brightness(1);
 }
 
-/* Градиент слева направо */
 .article-block::before {
   content: "";
   position: absolute;
@@ -85,7 +81,6 @@
   z-index: 0;
 }
 
-/* Текст статьи */
 .article-title {
   position: relative;
   padding: 15px;
@@ -103,7 +98,6 @@
   z-index: 1;
 }
 
-/* === Метка активного фильтра === */
 .current-filter-label {
   font-size: 16px;
   margin-bottom: 15px;

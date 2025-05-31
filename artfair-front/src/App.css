@@ -1,4 +1,4 @@
-/* Сделать весь документ прокручиваемым */
+
 html, body {
   margin: 0;
   padding: 0;
@@ -9,14 +9,12 @@ html, body {
   overflow-y: auto;
 }
 
-/* Основной контейнер приложения */
 .app-container {
   text-align: center;
   padding: 20px;
   box-sizing: border-box;
 }
 
-/* Секция форм (например, регистрация / вход) */
 .form-section {
   display: flex;
   justify-content: center;

@@ -1,6 +1,5 @@
 const { getCommentsByPostId, createComment } = require('../models/commentModel');
 
-// GET /api/comments/:postId
 exports.getComments = async (req, res) => {
   const postId = parseInt(req.params.postId, 10);
   if (isNaN(postId)) return res.status(400).json({ error: 'Некорректный ID поста' });
@@ -13,7 +12,6 @@ exports.getComments = async (req, res) => {
   }
 };
 
-// POST /api/comments/:postId
 exports.addComment = async (req, res) => {
   const postId = parseInt(req.params.postId, 10);
   const userId = req.user.id;

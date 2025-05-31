@@ -13,102 +13,84 @@ import article5 from '../assets/images/article5.png';
 const articles = [
   {
     id: 1,
-    title: "How to Improve Your Digital Art",
-    summary: "Learn key tips and techniques to enhance your digital art skills effectively.",
-    link: "#",
-    filters: ["All", "Digital Painting", "Popular"],
-    image: article1
+    title: "Article 1",
+    summary: "Summary of article 1",
+    image: article1,
+    link: "#"
   },
   {
     id: 2,
-    title: "Top 10 AI Art Tools",
-    summary: "Explore the best AI tools that can boost your creative process in 2025.",
-    link: "#",
-    filters: ["All", "AI Drawings", "Popular"],
-    image: article2
+    title: "Article 2",
+    summary: "Summary of article 2",
+    image: article2,
+    link: "#"
   },
   {
     id: 3,
-    title: "Creating Anime Characters",
-    summary: "A step-by-step guide on designing engaging anime characters.",
-    link: "#",
-    filters: ["All", "Anime", "Portraits"],
-    image: article3
+    title: "Article 3",
+    summary: "Summary of article 3",
+    image: article3,
+    link: "#"
   },
   {
     id: 4,
-    title: "Landscape Painting Basics",
-    summary: "Understand the fundamentals of painting breathtaking landscapes.",
-    link: "#",
-    filters: ["All", "Landscapes", "Traditional"],
-    image: article4
+    title: "Article 4",
+    summary: "Summary of article 4",
+    image: article4,
+    link: "#"
   },
   {
     id: 5,
-    title: "3D Modeling Tips",
-    summary: "Improve your 3D modeling skills with these practical tips.",
-    link: "#",
-    filters: ["All", "3D"],
-    image: article5
-  },
+    title: "Article 5",
+    summary: "Summary of article 5",
+    image: article5,
+    link: "#"
+  }
 ];
 
 const MainPage = () => {
-  const [activeFilter, setActiveFilter] = useState("All");
   const [artworks, setArtworks] = useState([]);
-  const [errorImages, setErrorImages] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
-    const sortParam = activeFilter === "Popular" ? "popular" : "created_at";
-    fetchArtworks(sortParam)
-      .then(data => setArtworks(data))
+    fetchArtworks('created_at')
+      .then(data => {
+        const fixed = data.map(art => ({
+          ...art,
+          imageUrl: `http://localhost:5000${art.imageUrl}`
+        }));
+        setArtworks(fixed);
+      })
       .catch(err => console.error("Ошибка при загрузке артов:", err));
-  }, [activeFilter]);
-
-  const handleFilterClick = (filter) => {
-    setActiveFilter(filter);
-  };
+  }, []);
 
   const handleArtworkClick = (id) => {
     navigate(`/art/${id}`);
   };
 
-  const visibleArtworks = artworks.filter(post =>
-    (activeFilter === "All" || activeFilter === "Popular" || (Array.isArray(post.tags) && post.tags.includes(activeFilter))) &&
-    !errorImages[post.id]
-  );
-
   return (
     <div className="main-container">
       <div className="filters-wrapper">
-        <ArtworksList activeFilter={activeFilter} onFilterClick={handleFilterClick} />
+        <ArtworksList activeFilter={"All"} onFilterClick={() => {}} />
       </div>
 
       <div className="articles-row">
-        {articles
-          .filter(article => article.filters.includes(activeFilter))
-          .slice(0, 3)
-          .map(article => (
-            <a href={article.link} key={article.id} className="article-block" tabIndex={0}>
-              <div
-                className="article-bg"
-                style={{
-                  backgroundImage: `linear-gradient(to right, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.05)), url(${article.image})`
-                }}
-              />
-              <h3 className="article-title">{article.title}</h3>
-              <p className="article-summary">{article.summary}</p>
-            </a>
-          ))}
-      </div>
-
-      <div className="current-filter-label">
-        Showing artworks for filter: <span className="filter-name">{activeFilter}</span>
+        {articles.slice(0, 3).map(article => (
+          <a href={article.link} key={article.id} className="article-block" tabIndex={0}>
+            <div
+              className="article-bg"
+              style={{
+                backgroundImage: `linear-gradient(to right, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.05)), url(${article.image})`
+              }}
+            />
+            <h3 className="article-title">{article.title}</h3>
+            <p className="article-summary">{article.summary}</p>
+          </a>
+        ))}
       </div>
 
       <div className="gallery">
-        {visibleArtworks.map(art => (
+        {artworks.map(art => (
           <div
             key={art.id}
             className="gallery-item"
@@ -120,7 +102,10 @@ const MainPage = () => {
             <img
               src={art.imageUrl}
               alt={art.title}
-              onError={() => setErrorImages(prev => ({ ...prev, [art.id]: true }))}
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = '/default-image.png'; 
+              }}
             />
           </div>
         ))}

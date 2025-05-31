@@ -28,9 +28,8 @@
   transition: max-height 0.3s ease;
 }
 
-/* Увеличение размера в 1.5 раза для вертикальных изображений */
 .art-image.portrait {
-  max-height: 120vh; /* 80vh * 1.5 = 120vh */
+  max-height: 120vh; 
 }
 
 .art-right {

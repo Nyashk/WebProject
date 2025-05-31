@@ -9,13 +9,11 @@ exports.register = async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
-    // 1. Проверяем, нет ли уже пользователя с таким email
     const existingUser = await userModel.findUserByEmail(email);
     if (existingUser) {
       return res.status(400).json({ message: 'Пользователь с таким email уже существует' });
     }
 
-    // 2. Хешируем пароль и создаём
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
     const newUser = await userModel.createUser({
       username,
@@ -23,14 +21,12 @@ exports.register = async (req, res) => {
       password: hashedPassword
     });
 
-    // 3. Генерируем JWT
     const token = jwt.sign(
       { id: newUser.id, email: newUser.email },
       JWT_SECRET,
       { expiresIn: '24h' }
     );
 
-    // 4. Возвращаем клиенту и token, и объект user
     return res.status(201).json({
       message: 'Регистрация успешна',
       token,
@@ -86,7 +82,6 @@ exports.login = async (req, res) => {
 };
 
 exports.logout = async (req, res) => {
-  // Здесь можно добавить логику инвалидирования токена, если нужно
   return res.status(200).json({ message: 'Выход выполнен успешно' });
 };
 

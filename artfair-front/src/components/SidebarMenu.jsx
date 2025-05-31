@@ -45,7 +45,7 @@ const SidebarMenu = () => {
           <li><FaShoppingCart /> Shop</li>
           <hr />
           <li><FaPen /> Add Article</li>
-          <li onClick={goToUpload}><FaPalette /> Add Art</li> {/* <-- обновлено */}
+          <li onClick={goToUpload}><FaPalette /> Add Art</li>
           <hr />
           <li><FaCog /> Settings</li>
           <li><FaSignOutAlt /> Logout</li>

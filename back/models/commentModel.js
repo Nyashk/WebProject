@@ -1,6 +1,5 @@
 const db = require('../config/db');
 
-// Получить все комментарии к посту
 async function getCommentsByPostId(postId) {
   const [rows] = await db.query(
     `SELECT 
@@ -19,7 +18,6 @@ async function getCommentsByPostId(postId) {
   return rows;
 }
 
-// Создать комментарий
 async function createComment({ postId, userId, content }) {
   const [result] = await db.query(
     `INSERT INTO comments (post_id, user_id, content)

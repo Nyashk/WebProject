@@ -8,7 +8,7 @@ const API = axios.create({
 export const fetchComments = (postId) =>
   API.get(`/${postId}`).then(res => res.data);
 
-// Добавить комментарий (требуется авторизация)
+// Добавить комментарий авторизация
 export const postComment = (postId, content) => {
   const token = localStorage.getItem('token');
   return API.post(

@@ -2,7 +2,6 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// Убедимся, что путь существует
 const ensureUploadPath = (folder) => {
   const dir = path.join(__dirname, '..', 'uploads', folder);
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });

@@ -1,6 +1,5 @@
 const db = require('../config/db');
 
-// Список постов пользователя
 async function getPostsByUser(userId) {
   const [rows] = await db.query(
     `SELECT
@@ -20,12 +19,10 @@ async function getPostsByUser(userId) {
   return rows;
 }
 
-// Список своих постов
 async function getMyPosts(userId) {
   return getPostsByUser(userId);
 }
 
-// Создать новый пост
 async function createPost({ userId, imageUrl, title, description }) {
   const [result] = await db.query(
     `INSERT INTO posts (user_id, image_url, title, description)
@@ -51,7 +48,6 @@ async function createPost({ userId, imageUrl, title, description }) {
   return rows[0];
 }
 
-// Получить один пост по ID с количеством лайков
 async function getPostById(postId) {
   const [rows] = await db.query(
     `SELECT
@@ -72,7 +68,6 @@ async function getPostById(postId) {
   return rows[0] || null;
 }
 
-// Получить все посты с возможностью сортировки
 async function getAllPosts(sortBy = 'created_at') {
   const orderBy =
     sortBy === 'popular' ? 'likes DESC, p.created_at DESC' : 'p.created_at DESC';
@@ -97,7 +92,6 @@ async function getAllPosts(sortBy = 'created_at') {
   return rows;
 }
 
-// Получить количество лайков
 async function getLikesCount(postId) {
   const [rows] = await db.query(
     `SELECT COUNT(*) AS likesCount FROM post_likes WHERE post_id = ?`,
@@ -106,7 +100,6 @@ async function getLikesCount(postId) {
   return rows[0].likesCount || 0;
 }
 
-// Проверить, лайкал ли пользователь пост
 async function hasUserLikedPost(postId, userId) {
   const [rows] = await db.query(
     `SELECT 1 FROM post_likes WHERE post_id = ? AND user_id = ? LIMIT 1`,
@@ -115,7 +108,6 @@ async function hasUserLikedPost(postId, userId) {
   return rows.length > 0;
 }
 
-// Поставить лайк
 async function likePost(postId, userId) {
   try {
     await db.query(
@@ -129,7 +121,6 @@ async function likePost(postId, userId) {
   }
 }
 
-// Убрать лайк
 async function unlikePost(postId, userId) {
   const [result] = await db.query(
     `DELETE FROM post_likes WHERE post_id = ? AND user_id = ?`,

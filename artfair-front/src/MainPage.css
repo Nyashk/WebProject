@@ -2,23 +2,20 @@
   background-color: #10101a;
   min-height: 100vh;
   color: white;
-  padding: 60px 20px 20px 20px; /* было 80px сверху, стало 60px, смещаем вверх на 20px */
+  padding: 60px 20px 20px 20px; 
 }
 
-/* Контейнер фильтров */
 .filters-wrapper {
   margin-bottom: 25px;
   margin-top: 10px;
 }
 
-/* Ряд статей */
 .articles-row {
   display: flex;
   gap: 15px;
   margin-bottom: 25px;
 }
 
-/* Статья */
 .article-block {
   position: relative;
   display: block;
@@ -30,7 +27,7 @@
   text-decoration: none;
   color: white;
   cursor: pointer;
-  background-color: #1a1a2e; /* фон чуть светлее */
+  background-color: #1a1a2e; 
   box-shadow: 0 0 10px rgba(0,0,0,0.4);
   transition: box-shadow 0.3s ease;
 }
@@ -59,7 +56,6 @@
   z-index: 1;
 }
 
-/* Текущий фильтр */
 .current-filter-label {
   font-size: 16px;
   margin-bottom: 15px;
@@ -71,7 +67,6 @@
   font-weight: 700;
 }
 
-/* Галерея артов */
 .gallery {
   display: flex;
   flex-wrap: wrap;
@@ -79,13 +74,11 @@
   justify-content: flex-start;
 }
 
-/* Каждый арт — фиксированная высота, разная ширина */
-/* Подгоняем изображения по высоте и auto ширине, чтобы сохранить пропорции */
 .gallery-item {
   background-color: #2a2a2a;
   border-radius: 8px;
   overflow: hidden;
-  height: 200px; /* фиксированная высота для всех */
+  height: 200px; 
   flex-grow: 1;
   flex-shrink: 0;
   position: relative;
@@ -94,7 +87,6 @@
   justify-content: center;
 }
 
-/* Изображения занимают 100% высоты, ширина авто */
 .gallery-item img {
   height: 100%;
   width: auto;

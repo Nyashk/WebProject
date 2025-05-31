@@ -27,7 +27,7 @@ const ArtDetailPage = () => {
         setArtwork(res.data);
         setError(null);
         setLikesCount(res.data.likes || 0);
-        setLiked(false); // Можно потом запросить, лайкал ли юзер (если есть API)
+        setLiked(false); 
       } catch (err) {
         setError('Artwork not found');
         setArtwork(null);
@@ -39,7 +39,7 @@ const ArtDetailPage = () => {
     fetchArtwork();
   }, [id]);
 
-  // Проверяем ориентацию изображения после загрузки
+  
   const handleImageLoad = () => {
     if (imgRef.current) {
       const { naturalWidth, naturalHeight } = imgRef.current;

@@ -4,7 +4,6 @@ const API = axios.create({
   baseURL: 'http://localhost:5000/api/auth',
 });
 
-// Прописываем токен как Authorization: Bearer <token>
 API.interceptors.request.use(config => {
   const token = localStorage.getItem('token');
   if (token) {
@@ -13,7 +12,6 @@ API.interceptors.request.use(config => {
   return config;
 });
 
-// Отслеживаем вход/регистрацию/выход
 API.interceptors.response.use(response => {
   if (
     response.config.url.includes('/login') ||
@@ -31,7 +29,6 @@ export const loginUser    = (userData) => API.post('/login', userData);
 export const logoutUser   = ()        => API.post('/logout');
 export const checkAuth    = ()        => API.get('/check-auth');
 
-// Отдельные POST запросы, требующие auth
 export const uploadAvatar = (formData) => axios.post('/api/users/avatar', formData, {
   headers: {
     Authorization: `Bearer ${localStorage.getItem('token')}`

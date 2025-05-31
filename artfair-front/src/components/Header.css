@@ -45,7 +45,7 @@
   padding: 4px 10px;
   color: #ffffff;
   max-width: 250px;
-  margin-left: -750px; /* Смещение вправо */
+  margin-left: -750px; 
 }
 
 .search-bar input {

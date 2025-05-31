@@ -8,7 +8,6 @@ async function search(req, res) {
   const term = `%${q.trim().toLowerCase()}%`;
 
   try {
-    // Поиск пользователей по username
     const [users] = await db.query(
       `SELECT id, username 
        FROM users 
@@ -17,7 +16,6 @@ async function search(req, res) {
       [term]
     );
 
-    // Поиск постов (артов) по названию
     const [artworks] = await db.query(
       `SELECT p.id, p.title, p.image_url AS imageUrl, u.username 
        FROM posts p
