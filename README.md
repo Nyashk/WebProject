@@ -29,17 +29,11 @@ ARTFAIR - это современная веб-платформа для дем�
 ### Backend:
 - Node.js 16+
 - Express 4.x
-- MongoDB (Mongoose ODM)
+- MySQL
 - JWT аутентификация
 - Multer для обработки файлов
 - Bcrypt для хеширования паролей
 - CORS
-
-### Инструменты:
-- ESLint + Prettier
-- Jest + React Testing Library
-- GitHub Actions (CI/CD)
-- Webpack (через CRA)
 
 ## 📦 Установка
 
@@ -95,17 +89,7 @@ npm run build
 # Запуск сервера
 cd ../back
 npm start
-🧪 Тестирование
-Запуск всех тестов:
 
-bash
-# Backend тесты
-cd back
-npm test
-
-# Frontend тесты
-cd ../artfair-front
-npm test
 🌐 Деплой
 Frontend на GitHub Pages
 
